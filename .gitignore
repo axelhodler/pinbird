@@ -5,6 +5,7 @@
 .loadpath
 target/
 bin/
+build/
 *~
 # ================================================================================
 # Dont track the emacs backup files
