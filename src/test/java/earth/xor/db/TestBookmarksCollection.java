@@ -22,8 +22,9 @@ public class TestBookmarksCollection {
     private MongoClient client;
 
     @Before
-    public void setUpTests() throws UnknownHostException {
+    public void setUpTests() throws IOException {
         this.client = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
+        launchEmbeddedMongo();
     }
 
     private void launchEmbeddedMongo() throws UnknownHostException, IOException {
@@ -31,29 +32,11 @@ public class TestBookmarksCollection {
         m.launchEmbeddedMongo(DbProperties.EMBEDDED_PORT);
     }
 
-    private DBObject createAndFindDocument() {
-        DB db = client.getDB(DbProperties.DB_NAME);
-        DBCollection col = db.getCollection(DbProperties.DB_NAME);
-        col.insert(new BasicDBObject("foo", "bar"));
-        DBObject dbo = col.findOne(new BasicDBObject("foo", "bar"));
-        return dbo;
-    }
-
     private Bookmark createExampleBookmark() {
         Bookmark b = new Bookmark();
         b.setTitle("foo");
         b.setUrl("http://www.foo.org");
         return b;
-    }
-
-    @Test
-    public void testAccessingTheEmbeddedMongoClient()
-            throws UnknownHostException, IOException {
-        launchEmbeddedMongo();
-
-        DBObject dbo = createAndFindDocument();
-
-        assertEquals("bar", dbo.get("foo"));
     }
 
     @Test
