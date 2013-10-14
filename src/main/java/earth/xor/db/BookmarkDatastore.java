@@ -19,16 +19,19 @@ public class BookmarkDatastore {
     }
 
     public void saveBookmark(Bookmark b) {
-        col.insert(new BasicDBObject("title", b.getTitle()).append("url",
-                b.getUrl()));
+        col.insert(createBookmarkBasicDBObject(b));
     }
 
     public Bookmark getBookmark(Bookmark b) {
         DBObject dbo = col.findOne(new BasicDBObject("title", b.getTitle()));
         Bookmark bm = new Bookmark();
-        bm.setTitle(dbo.get("title").toString());
-        bm.setUrl(dbo.get("url").toString());
+        bm.setTitle(dbo.get(DbProperties.TITLE).toString());
+        bm.setUrl(dbo.get(DbProperties.URL).toString());
         return bm;
     }
 
+    private BasicDBObject createBookmarkBasicDBObject(Bookmark b) {
+        return new BasicDBObject(DbProperties.TITLE, b.getTitle()).append(
+                DbProperties.URL, b.getUrl());
+    }
 }
