@@ -1,6 +1,6 @@
 package earth.xor.db;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -13,6 +13,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+import earth.xor.Bookmark;
 import earth.xor.DbProperties;
 
 public class TestBookmarksCollection {
@@ -25,6 +26,18 @@ public class TestBookmarksCollection {
         DBObject dbo = createAndFindDocument();
 
         assertEquals("bar", dbo.get("foo"));
+    }
+
+    @Test
+    public void testSavingAndAccessingBookmark() throws UnknownHostException {
+        MongoClient c = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
+        Bookmark b = new Bookmark();
+        b.setTitle("foo");
+        b.setUrl("http://www.foo.org");
+
+        BookmarkDatastore ds = new BookmarkDatastore(c);
+        ds.saveBookmark(b);
+        assertEquals("foo", ds.getBookmark(b).getTitle());
     }
 
     private DBObject createAndFindDocument() throws UnknownHostException {
