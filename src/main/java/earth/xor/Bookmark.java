@@ -21,6 +21,10 @@ public class Bookmark {
         return this.url;
     }
 
-
+    @Override
+    public String toString() {
+        return "Bookmark with Title:" + getTitle() + " and URL: " + getUrl()
+                + " @" + Integer.toHexString(hashCode());
+    }
 
 }
