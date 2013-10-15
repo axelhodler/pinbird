@@ -23,6 +23,7 @@ import earth.xor.DbProperties;
 public class TestBookmarksCollection {
 
     private MongoClient client;
+    private BookmarkDatastore ds;
 
     @BeforeClass
     public static void before() throws UnknownHostException, IOException {
@@ -32,6 +33,7 @@ public class TestBookmarksCollection {
     @Before
     public void setUpTests() throws UnknownHostException {
         this.client = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
+        this.ds = new BookmarkDatastore(client);
     }
 
     private Bookmark createExampleBookmark() {
@@ -46,6 +48,13 @@ public class TestBookmarksCollection {
                 DbProperties.COL_NAME);
     }
 
+    private void saveSomeExampleBookmarks() {
+        for (int i = 0; i < 3; i++) {
+            Bookmark b = createExampleBookmark();
+            ds.saveBookmark(b);
+        }
+    }
+
     private void dropBookmarksCollection() {
         getBookmarksCollection()
                 .drop();
@@ -54,7 +63,6 @@ public class TestBookmarksCollection {
     @Test
     public void testSaveAndGetBookmarkById() {
         Bookmark b = createExampleBookmark();
-        BookmarkDatastore ds = new BookmarkDatastore(client);
         ds.saveBookmark(b);
 
         DBCollection col = getBookmarksCollection();
@@ -67,17 +75,12 @@ public class TestBookmarksCollection {
     @Test
     public void testGettingAllBookmarks() {
 
-        BookmarkDatastore ds = new BookmarkDatastore(client);
-        Bookmark b1 = createExampleBookmark();
-        ds.saveBookmark(b1);
-        Bookmark b2 = createExampleBookmark();
-        ds.saveBookmark(b2);
-        Bookmark b3 = createExampleBookmark();
-        ds.saveBookmark(b3);
+        saveSomeExampleBookmarks();
 
         List<Bookmark> allBookmarks = ds.getAllBookmarks();
         assertEquals(3, allBookmarks.size());
     }
+
 
     @After
     public void cleanUp() {

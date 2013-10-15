@@ -52,10 +52,15 @@ public class BookmarkDatastore {
     public List<Bookmark> getAllBookmarks() {
         List<Bookmark> allBookmarks = new ArrayList<Bookmark>();
         DBCursor curs = col.find();
+        iterateThroughAllBookmarks(allBookmarks, curs);
+
+        return allBookmarks;
+    }
+
+    private void iterateThroughAllBookmarks(List<Bookmark> allBookmarks,
+            DBCursor curs) {
         while (curs.hasNext()) {
             allBookmarks.add(createBookmarkFromDBObject(curs.next()));
         }
-
-        return allBookmarks;
     }
 }
