@@ -81,7 +81,6 @@ public class TestBookmarksCollection {
         assertEquals(3, allBookmarks.size());
     }
 
-
     @After
     public void cleanUp() {
         dropBookmarksCollection();
