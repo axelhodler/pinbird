@@ -16,11 +16,9 @@ import earth.xor.DbProperties;
 
 public class BookmarkDatastore {
 
-    private MongoClient client;
     private DBCollection col;
 
     public BookmarkDatastore(MongoClient c) {
-        this.client = c;
         this.col = c.getDB(DbProperties.DB_NAME).getCollection(
                 DbProperties.COL_NAME);
     }
