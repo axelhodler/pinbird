@@ -17,19 +17,12 @@ public class BookmarkDatastore {
 
     public BookmarkDatastore(MongoClient c) {
         this.client = c;
-        this.col = c.getDB(DbProperties.DB_NAME).getCollection("bookmarks");
+        this.col = c.getDB(DbProperties.DB_NAME).getCollection(
+                DbProperties.COL_NAME);
     }
 
     public void saveBookmark(Bookmark b) {
         col.insert(createBookmarkBasicDBObject(b));
-    }
-
-    public Bookmark getBookmark(Bookmark b) {
-        DBObject dbo = col.findOne(new BasicDBObject("title", b.getTitle()));
-        Bookmark bm = new Bookmark();
-        bm.setTitle(dbo.get(DbProperties.TITLE).toString());
-        bm.setUrl(dbo.get(DbProperties.URL).toString());
-        return bm;
     }
 
     private BasicDBObject createBookmarkBasicDBObject(Bookmark b) {
@@ -38,7 +31,13 @@ public class BookmarkDatastore {
     }
 
     public Bookmark getBookmark(String id) {
-        DBObject dbo = col.findOne(new BasicDBObject("_id", new ObjectId(id)));
+        DBObject dbo = col.findOne(new BasicDBObject(DbProperties.ID,
+                new ObjectId(id)));
+        Bookmark bm = createBookmarkFromDBObject(dbo);
+        return bm;
+    }
+
+    private Bookmark createBookmarkFromDBObject(DBObject dbo) {
         Bookmark bm = new Bookmark();
         bm.setId(dbo.get(DbProperties.ID).toString());
         bm.setTitle(dbo.get(DbProperties.TITLE).toString());

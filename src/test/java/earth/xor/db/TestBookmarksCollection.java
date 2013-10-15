@@ -40,18 +40,14 @@ public class TestBookmarksCollection {
         return b;
     }
 
-    private void dropBookmarksCollection() {
-        client.getDB(DbProperties.DB_NAME).getCollection(DbProperties.COL_NAME)
-                .drop();
+    private DBCollection getBookmarksCollection() {
+        return client.getDB(DbProperties.DB_NAME).getCollection(
+                DbProperties.COL_NAME);
     }
 
-    @Test
-    public void testSavingAndAccessingBookmark() {
-        Bookmark b = createExampleBookmark();
-
-        BookmarkDatastore ds = new BookmarkDatastore(client);
-        ds.saveBookmark(b);
-        assertEquals("foo", ds.getBookmark(b).getTitle());
+    private void dropBookmarksCollection() {
+        getBookmarksCollection()
+                .drop();
     }
 
     @Test
@@ -60,10 +56,9 @@ public class TestBookmarksCollection {
         BookmarkDatastore ds = new BookmarkDatastore(client);
         ds.saveBookmark(b);
 
-        DBCollection col = client.getDB(DbProperties.DB_NAME).getCollection(
-                DbProperties.COL_NAME);
-        DBObject dbo = col.findOne(new BasicDBObject("title", "foo"));
-        String id = dbo.get("_id").toString();
+        DBCollection col = getBookmarksCollection();
+        DBObject dbo = col.findOne(new BasicDBObject(DbProperties.TITLE, "foo"));
+        String id = dbo.get(DbProperties.ID).toString();
 
         assertEquals(id, ds.getBookmark(id).getId());
     }
