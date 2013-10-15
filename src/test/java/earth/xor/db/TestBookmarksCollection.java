@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -61,6 +62,21 @@ public class TestBookmarksCollection {
         String id = dbo.get(DbProperties.ID).toString();
 
         assertEquals(id, ds.getBookmark(id).getId());
+    }
+
+    @Test
+    public void testGettingAllBookmarks() {
+
+        BookmarkDatastore ds = new BookmarkDatastore(client);
+        Bookmark b1 = createExampleBookmark();
+        ds.saveBookmark(b1);
+        Bookmark b2 = createExampleBookmark();
+        ds.saveBookmark(b2);
+        Bookmark b3 = createExampleBookmark();
+        ds.saveBookmark(b3);
+
+        List<Bookmark> allBookmarks = ds.getAllBookmarks();
+        assertEquals(3, allBookmarks.size());
     }
 
     @After

@@ -1,9 +1,13 @@
 package earth.xor.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
@@ -43,5 +47,15 @@ public class BookmarkDatastore {
         bm.setTitle(dbo.get(DbProperties.TITLE).toString());
         bm.setUrl(dbo.get(DbProperties.URL).toString());
         return bm;
+    }
+
+    public List<Bookmark> getAllBookmarks() {
+        List<Bookmark> allBookmarks = new ArrayList<Bookmark>();
+        DBCursor curs = col.find();
+        while (curs.hasNext()) {
+            allBookmarks.add(createBookmarkFromDBObject(curs.next()));
+        }
+
+        return allBookmarks;
     }
 }
