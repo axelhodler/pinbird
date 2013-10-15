@@ -1,5 +1,7 @@
 package earth.xor.db;
 
+import org.bson.types.ObjectId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -33,5 +35,14 @@ public class BookmarkDatastore {
     private BasicDBObject createBookmarkBasicDBObject(Bookmark b) {
         return new BasicDBObject(DbProperties.TITLE, b.getTitle()).append(
                 DbProperties.URL, b.getUrl());
+    }
+
+    public Bookmark getBookmark(String id) {
+        DBObject dbo = col.findOne(new BasicDBObject("_id", new ObjectId(id)));
+        Bookmark bm = new Bookmark();
+        bm.setId(dbo.get(DbProperties.ID).toString());
+        bm.setTitle(dbo.get(DbProperties.TITLE).toString());
+        bm.setUrl(dbo.get(DbProperties.URL).toString());
+        return bm;
     }
 }

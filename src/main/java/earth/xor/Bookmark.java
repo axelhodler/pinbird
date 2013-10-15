@@ -2,8 +2,17 @@ package earth.xor;
 
 public class Bookmark {
 
+    private String objectId;
     private String title;
     private String url;
+
+    public void setId(String id) {
+        this.objectId = id;
+    }
+
+    public String getId() {
+        return this.objectId;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -26,5 +35,4 @@ public class Bookmark {
         return "Bookmark with Title:" + getTitle() + " and URL: " + getUrl()
                 + " @" + Integer.toHexString(hashCode());
     }
-
 }

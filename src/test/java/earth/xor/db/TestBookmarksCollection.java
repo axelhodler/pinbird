@@ -11,6 +11,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import earth.xor.Bookmark;
@@ -49,6 +52,20 @@ public class TestBookmarksCollection {
         BookmarkDatastore ds = new BookmarkDatastore(client);
         ds.saveBookmark(b);
         assertEquals("foo", ds.getBookmark(b).getTitle());
+    }
+
+    @Test
+    public void testSaveAndGetBookmarkById() {
+        Bookmark b = createExampleBookmark();
+        BookmarkDatastore ds = new BookmarkDatastore(client);
+        ds.saveBookmark(b);
+
+        DBCollection col = client.getDB(DbProperties.DB_NAME).getCollection(
+                DbProperties.COL_NAME);
+        DBObject dbo = col.findOne(new BasicDBObject("title", "foo"));
+        String id = dbo.get("_id").toString();
+
+        assertEquals(id, ds.getBookmark(id).getId());
     }
 
     @After
