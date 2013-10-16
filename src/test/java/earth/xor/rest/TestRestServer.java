@@ -8,8 +8,11 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,6 +36,8 @@ public class TestRestServer {
         client = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
     }
 
+    private DBCollection col;
+
     private DBObject findTheDocumentAddedViaPost() {
         DBObject dbo = client.getDB(DbProperties.DB_NAME)
                 .getCollection(DbProperties.COL_NAME)
@@ -51,6 +56,12 @@ public class TestRestServer {
         RestAssured.port = 4567;
     }
 
+    @Before
+    public void setUp() {
+        this.col = client.getDB(DbProperties.DB_NAME).getCollection(
+                DbProperties.COL_NAME);
+    }
+
     @Test
     public void testAddingABookmark() throws UnknownHostException, IOException {
 
@@ -65,9 +76,6 @@ public class TestRestServer {
     @Test
     public void testGettingABookmarkViaId() {
 
-        DBCollection col = client.getDB(DbProperties.DB_NAME).getCollection(
-                DbProperties.COL_NAME);
-
         col.insert(TestValues.BOOKMARK_1);
 
         DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
@@ -80,5 +88,25 @@ public class TestRestServer {
         JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
 
         assertEquals("foo", jso.get(DbProperties.TITLE).toString());
+    }
+
+    @Test
+    public void testGettingAllBookmarks() {
+
+        col.insert(TestValues.BOOKMARK_1);
+        col.insert(TestValues.BOOKMARK_2);
+        col.insert(TestValues.BOOKMARK_3);
+
+        String jsonResponse = expect().contentType(JSON.toString()).when()
+                .get("/bookmarks").asString();
+
+        JSONArray ja = (JSONArray) JSONValue.parse(jsonResponse);
+
+        assertEquals(3, ja.size());
+    }
+
+    @After
+    public void dropDatabase() {
+        col.drop();
     }
 }

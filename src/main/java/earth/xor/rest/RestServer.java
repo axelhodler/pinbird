@@ -3,6 +3,9 @@ package earth.xor.rest;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.List;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -33,6 +36,23 @@ public class RestServer {
     public void start() {
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
+
+        get(new Route("/bookmarks") {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public Object handle(Request arg0, Response arg1) {
+                List<Bookmark> allBookmarks = ds.getAllBookmarks();
+
+                JSONArray ja = new JSONArray();
+
+                for (Bookmark b : allBookmarks) {
+                    ja.add(bookmarkToJSONObject(b));
+                }
+                return ja.toJSONString();
+            }
+            
+        });
     }
 
     private void addBookmarkGETbyIdRoute() {
