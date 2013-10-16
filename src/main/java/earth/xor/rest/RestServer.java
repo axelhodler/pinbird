@@ -21,13 +21,6 @@ public class RestServer {
 
     public void start() {
 
-        get(new Route("/hello") {
-            @Override
-            public Object handle(Request request, Response response) {
-                return "hello world";
-            }
-        });
-
         post(new Route("/bookmark") {
 
             @Override
