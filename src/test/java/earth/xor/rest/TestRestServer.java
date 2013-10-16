@@ -3,6 +3,7 @@ package earth.xor.rest;
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.http.ContentType.JSON;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -66,7 +67,9 @@ public class TestRestServer {
     public void testAddingABookmark() throws UnknownHostException, IOException {
 
         given().body(TestValues.POST_BOOKMARK_1).expect()
-                .contentType(JSON.toString()).when().post(RestRoutes.BOOKMARK);
+                .contentType(JSON.toString()).and()
+                .header("Access-Control-Allow-Origin", equalTo("*")).when()
+                .post(RestRoutes.BOOKMARK);
 
         DBObject dbo = findTheDocumentAddedViaPost();
 
@@ -82,7 +85,8 @@ public class TestRestServer {
 
         String id = addedDoc.get(DbProperties.ID).toString();
 
-        String jsonResponse = expect().contentType(JSON.toString()).when()
+        String jsonResponse = expect().contentType(JSON.toString()).and()
+                .header("Access-Control-Allow-Origin", equalTo("*")).when()
                 .get(RestRoutes.BOOKMARK + "/" + id).asString();
 
         JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
@@ -91,7 +95,8 @@ public class TestRestServer {
 
         assertEquals(id, bookmark.get(DbProperties.ID).toString());
         assertEquals("foo", bookmark.get(DbProperties.TITLE).toString());
-        assertEquals("http://www.foo.org", bookmark.get(DbProperties.URL).toString());
+        assertEquals("http://www.foo.org", bookmark.get(DbProperties.URL)
+                .toString());
     }
 
     @Test
@@ -101,7 +106,8 @@ public class TestRestServer {
         col.insert(TestValues.BOOKMARK_2);
         col.insert(TestValues.BOOKMARK_3);
 
-        String jsonResponse = expect().contentType(JSON.toString()).when()
+        String jsonResponse = expect().contentType(JSON.toString()).and()
+                .header("Access-Control-Allow-Origin", equalTo("*")).when()
                 .get(RestRoutes.BOOKMARKS).asString();
 
         System.out.println(jsonResponse);

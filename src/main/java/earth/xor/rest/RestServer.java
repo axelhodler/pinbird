@@ -44,7 +44,8 @@ public class RestServer {
 
             @SuppressWarnings("unchecked")
             @Override
-            public Object handle(Request arg0, Response arg1) {
+            public Object handle(Request request, Response response) {
+                addAccessControlAllowOriginToHeader(response);
                 List<Bookmark> allBookmarks = ds.getAllBookmarks();
 
                 JSONArray ja = addBookmarksToJSONArray(allBookmarks);
@@ -57,17 +58,19 @@ public class RestServer {
     }
 
     private void addBookmarkGETbyIdRoute() {
-        get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM, usedAcceptType) {
+        get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM,
+                usedAcceptType) {
 
             @SuppressWarnings("unchecked")
             @Override
             public Object handle(Request request, Response response) {
 
+                addAccessControlAllowOriginToHeader(response);
                 Bookmark b = ds
                         .getBookmark(request.params(RestRoutes.ID_PARAM));
 
                 JSONObject outerObject = new JSONObject();
-                
+
                 JSONObject innerObject = bookmarkToJSONObject(b);
                 outerObject.put(RestRoutes.BOOKMARK.substring(1), innerObject);
 
@@ -81,6 +84,7 @@ public class RestServer {
 
             @Override
             public Object handle(Request request, Response response) {
+                addAccessControlAllowOriginToHeader(response);
                 JSONObject obj = parseRequestBodyToJson(request);
 
                 BasicDBObject dbo = jsonObjectToBasicDBObject(obj);
@@ -112,13 +116,17 @@ public class RestServer {
         return obj;
     }
 
-    private JSONArray addBookmarksToJSONArray(
-            List<Bookmark> allBookmarks) {
+    @SuppressWarnings("unchecked")
+    private JSONArray addBookmarksToJSONArray(List<Bookmark> allBookmarks) {
         JSONArray ja = new JSONArray();
 
         for (Bookmark b : allBookmarks) {
             ja.add(bookmarkToJSONObject(b));
         }
         return ja;
+    }
+
+    private void addAccessControlAllowOriginToHeader(Response response) {
+        response.header("Access-Control-Allow-Origin", "*");
     }
 }
