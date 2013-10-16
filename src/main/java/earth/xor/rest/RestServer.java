@@ -60,15 +60,19 @@ public class RestServer {
     private void addBookmarkGETbyIdRoute() {
         get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM) {
 
+            @SuppressWarnings("unchecked")
             @Override
             public Object handle(Request request, Response response) {
 
                 Bookmark b = ds
                         .getBookmark(request.params(RestRoutes.ID_PARAM));
 
-                JSONObject obj = bookmarkToJSONObject(b);
+                JSONObject outerObject = new JSONObject();
+                
+                JSONObject innerObject = bookmarkToJSONObject(b);
+                outerObject.put("bookmark", innerObject);
 
-                return obj.toJSONString();
+                return outerObject.toJSONString();
             }
         });
     }

@@ -87,7 +87,11 @@ public class TestRestServer {
 
         JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
 
-        assertEquals("foo", jso.get(DbProperties.TITLE).toString());
+        JSONObject bookmark = (JSONObject) jso.get("bookmark");
+
+        assertEquals(id, bookmark.get(DbProperties.ID).toString());
+        assertEquals("foo", bookmark.get(DbProperties.TITLE).toString());
+        assertEquals("http://www.foo.org", bookmark.get(DbProperties.URL).toString());
     }
 
     @Test
