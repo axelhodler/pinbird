@@ -1,5 +1,6 @@
 package earth.xor.rest;
 
+import static spark.Spark.get;
 import static spark.Spark.post;
 
 import org.json.simple.JSONObject;
@@ -13,7 +14,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
+import earth.xor.Bookmark;
 import earth.xor.DbProperties;
+import earth.xor.db.BookmarkDatastore;
 
 public class RestServer {
 
@@ -29,6 +32,23 @@ public class RestServer {
 
     public void start() {
         addBookmarkPOSTroute();
+
+        get(new Route(RestRoutes.BOOKMARK + "/:id") {
+
+            @Override
+            public Object handle(Request request, Response response) {
+                BookmarkDatastore ds = new BookmarkDatastore(dbclient);
+
+                Bookmark b = ds.getBookmark(request.params(":id"));
+
+                JSONObject obj = new JSONObject();
+                obj.put(DbProperties.ID, b.getId());
+                obj.put(DbProperties.TITLE, b.getTitle());
+                obj.put(DbProperties.URL, b.getUrl());
+
+                return obj.toJSONString();
+            }
+        });
     }
 
     private void addBookmarkPOSTroute() {

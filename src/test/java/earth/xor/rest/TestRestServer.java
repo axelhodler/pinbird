@@ -1,5 +1,6 @@
 package earth.xor.rest;
 
+import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.http.ContentType.JSON;
 import static org.junit.Assert.assertEquals;
@@ -7,11 +8,14 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.jayway.restassured.RestAssured;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
@@ -24,7 +28,7 @@ public class TestRestServer {
     private static MongoClient client;
 
     private static void startEmbeddedAndClient() throws UnknownHostException,
-    IOException {
+            IOException {
         EmbeddedMongo.startEmbeddedMongo(DbProperties.EMBEDDED_PORT);
         client = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
     }
@@ -37,7 +41,8 @@ public class TestRestServer {
     }
 
     @BeforeClass
-    public static void setUpMongoAndServer() throws UnknownHostException, IOException {
+    public static void setUpMongoAndServer() throws UnknownHostException,
+            IOException {
         startEmbeddedAndClient();
 
         rs = new RestServer(client);
@@ -49,12 +54,35 @@ public class TestRestServer {
     @Test
     public void testAddingABookmark() throws UnknownHostException, IOException {
 
-        given().body(TestJSONValues.POST_BOOKMARK_1)
-                .expect().contentType(JSON.toString()).when()
-                .post(RestRoutes.BOOKMARK);
+        given().body(TestJSONValues.POST_BOOKMARK_1).expect()
+                .contentType(JSON.toString()).when().post(RestRoutes.BOOKMARK);
 
         DBObject dbo = findTheDocumentAddedViaPost();
 
         assertEquals("foo", dbo.get(DbProperties.TITLE).toString());
+    }
+
+    @Test
+    public void testGettingABookmarkViaId() {
+
+        // insert doc
+        BasicDBObject dbo = new BasicDBObject("title", "foo").append("url",
+                "whatever.org");
+        DBCollection col = client.getDB(DbProperties.DB_NAME).getCollection(
+                DbProperties.COL_NAME);
+
+        col.insert(dbo);
+        // find doc
+        DBObject addedDoc = col.findOne(dbo);
+
+        String id = addedDoc.get(DbProperties.ID).toString();
+
+        // get post via rest
+        String jsonResponse = expect().contentType(JSON.toString()).when()
+                .get(RestRoutes.BOOKMARK + "/" + id).asString();
+
+        JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
+
+        assertEquals("foo", jso.get(DbProperties.TITLE).toString());
     }
 }
