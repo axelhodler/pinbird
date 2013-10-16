@@ -36,7 +36,10 @@ public class RestServer {
     public void start() {
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
+        addGETAllBookmarks();
+    }
 
+    private void addGETAllBookmarks() {
         get(new Route("/bookmarks") {
 
             @SuppressWarnings("unchecked")
@@ -51,7 +54,6 @@ public class RestServer {
                 }
                 return ja.toJSONString();
             }
-            
         });
     }
 
