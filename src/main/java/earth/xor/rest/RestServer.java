@@ -40,7 +40,7 @@ public class RestServer {
     }
 
     private void addGETAllBookmarks() {
-        get(new Route("/bookmarks") {
+        get(new Route(RestRoutes.BOOKMARKS) {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -52,7 +52,10 @@ public class RestServer {
                 for (Bookmark b : allBookmarks) {
                     ja.add(bookmarkToJSONObject(b));
                 }
-                return ja.toJSONString();
+
+                JSONObject jo = new JSONObject();
+                jo.put(RestRoutes.BOOKMARKS.substring(1), ja);
+                return jo.toJSONString();
             }
         });
     }

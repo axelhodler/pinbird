@@ -104,9 +104,15 @@ public class TestRestServer {
         String jsonResponse = expect().contentType(JSON.toString()).when()
                 .get(RestRoutes.BOOKMARKS).asString();
 
-        JSONArray ja = (JSONArray) JSONValue.parse(jsonResponse);
+        System.out.println(jsonResponse);
+        JSONObject jo = (JSONObject) JSONValue.parse(jsonResponse);
+
+        JSONArray ja = (JSONArray) jo.get("bookmarks");
+
+        JSONObject firstObject = (JSONObject) ja.get(0);
 
         assertEquals(3, ja.size());
+        assertEquals("foo", firstObject.get(DbProperties.TITLE));
     }
 
     @After
