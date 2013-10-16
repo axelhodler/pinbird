@@ -40,18 +40,14 @@ public class RestServer {
     }
 
     private void addGETAllBookmarks() {
-        get(new Route(RestRoutes.BOOKMARKS) {
+        get(new Route(RestRoutes.BOOKMARKS, usedAcceptType) {
 
             @SuppressWarnings("unchecked")
             @Override
             public Object handle(Request arg0, Response arg1) {
                 List<Bookmark> allBookmarks = ds.getAllBookmarks();
 
-                JSONArray ja = new JSONArray();
-
-                for (Bookmark b : allBookmarks) {
-                    ja.add(bookmarkToJSONObject(b));
-                }
+                JSONArray ja = addBookmarksToJSONArray(allBookmarks);
 
                 JSONObject jo = new JSONObject();
                 jo.put(RestRoutes.BOOKMARKS.substring(1), ja);
@@ -61,7 +57,7 @@ public class RestServer {
     }
 
     private void addBookmarkGETbyIdRoute() {
-        get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM) {
+        get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM, usedAcceptType) {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -73,7 +69,7 @@ public class RestServer {
                 JSONObject outerObject = new JSONObject();
                 
                 JSONObject innerObject = bookmarkToJSONObject(b);
-                outerObject.put("bookmark", innerObject);
+                outerObject.put(RestRoutes.BOOKMARK.substring(1), innerObject);
 
                 return outerObject.toJSONString();
             }
@@ -114,5 +110,15 @@ public class RestServer {
         obj.put(DbProperties.TITLE, b.getTitle());
         obj.put(DbProperties.URL, b.getUrl());
         return obj;
+    }
+
+    private JSONArray addBookmarksToJSONArray(
+            List<Bookmark> allBookmarks) {
+        JSONArray ja = new JSONArray();
+
+        for (Bookmark b : allBookmarks) {
+            ja.add(bookmarkToJSONObject(b));
+        }
+        return ja;
     }
 }
