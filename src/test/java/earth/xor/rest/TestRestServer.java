@@ -65,14 +65,12 @@ public class TestRestServer {
     @Test
     public void testGettingABookmarkViaId() {
 
-        BasicDBObject dbo = new BasicDBObject(DbProperties.TITLE, "foo")
-                .append(DbProperties.URL, "http://www.foo.org");
         DBCollection col = client.getDB(DbProperties.DB_NAME).getCollection(
                 DbProperties.COL_NAME);
 
-        col.insert(dbo);
+        col.insert(TestValues.BOOKMARK_1);
 
-        DBObject addedDoc = col.findOne(dbo);
+        DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
 
         String id = addedDoc.get(DbProperties.ID).toString();
 
