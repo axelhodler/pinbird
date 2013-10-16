@@ -15,8 +15,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
 import earth.xor.Bookmark;
-import earth.xor.DbProperties;
 import earth.xor.db.BookmarkDatastore;
+import earth.xor.db.DbProperties;
 
 public class RestServer {
 

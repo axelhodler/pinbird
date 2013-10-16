@@ -19,7 +19,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import earth.xor.DbProperties;
+import earth.xor.db.DbProperties;
 import earth.xor.db.EmbeddedMongo;
 
 public class TestRestServer {

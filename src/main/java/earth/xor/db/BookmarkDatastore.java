@@ -12,7 +12,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import earth.xor.Bookmark;
-import earth.xor.DbProperties;
 
 public class BookmarkDatastore {
 
