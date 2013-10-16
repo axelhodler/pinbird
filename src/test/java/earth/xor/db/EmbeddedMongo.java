@@ -14,18 +14,18 @@ import de.flapdoodle.embed.process.runtime.Network;
 public class EmbeddedMongo {
 
     private static MongodExecutable mongodExecutable = null;
+    private static boolean isStarted = false;
 
     private EmbeddedMongo() {}
 
     public static void startEmbeddedMongo(int port)
             throws UnknownHostException, IOException {
-        if (mongodExecutable == null) {
+        if (!isStarted) {
             IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(Version.V2_4_5)
                     .net(new Net(port, Network.localhostIsIPv6())).build();
 
             MongodStarter runtime = MongodStarter.getDefaultInstance();
-
             startMongoExecutable(runtime, mongodConfig);
         } else {
             System.out.println("EmbeddedMongo has already been started");
@@ -36,11 +36,13 @@ public class EmbeddedMongo {
         if (mongodExecutable != null) {
             mongodExecutable.stop();
         }
+        isStarted = false;
     }
 
     private static void startMongoExecutable(MongodStarter runtime,
             IMongodConfig mongodConfig) throws IOException {
         mongodExecutable = runtime.prepare(mongodConfig);
         mongodExecutable.start();
+        isStarted = true;
     }
 }
