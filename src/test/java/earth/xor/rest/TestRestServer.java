@@ -40,7 +40,7 @@ public class TestRestServer {
     public static void setUpMongoAndServer() throws UnknownHostException, IOException {
         startEmbeddedAndClient();
 
-        rs = new RestServer();
+        rs = new RestServer(client);
         rs.start();
 
         RestAssured.port = 4567;
