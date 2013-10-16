@@ -98,7 +98,7 @@ public class TestRestServer {
         col.insert(TestValues.BOOKMARK_3);
 
         String jsonResponse = expect().contentType(JSON.toString()).when()
-                .get("/bookmarks").asString();
+                .get(RestRoutes.BOOKMARKS).asString();
 
         JSONArray ja = (JSONArray) JSONValue.parse(jsonResponse);
 
