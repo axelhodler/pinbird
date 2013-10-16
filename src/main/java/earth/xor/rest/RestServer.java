@@ -21,7 +21,7 @@ public class RestServer {
 
     public void start() {
 
-        post(new Route("/bookmark") {
+        post(new Route("/bookmark", "application/json") {
 
             @Override
             public Object handle(Request request, Response response) {
