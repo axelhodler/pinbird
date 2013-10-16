@@ -65,19 +65,17 @@ public class TestRestServer {
     @Test
     public void testGettingABookmarkViaId() {
 
-        // insert doc
-        BasicDBObject dbo = new BasicDBObject("title", "foo").append("url",
-                "whatever.org");
+        BasicDBObject dbo = new BasicDBObject(DbProperties.TITLE, "foo")
+                .append(DbProperties.URL, "http://www.foo.org");
         DBCollection col = client.getDB(DbProperties.DB_NAME).getCollection(
                 DbProperties.COL_NAME);
 
         col.insert(dbo);
-        // find doc
+
         DBObject addedDoc = col.findOne(dbo);
 
         String id = addedDoc.get(DbProperties.ID).toString();
 
-        // get post via rest
         String jsonResponse = expect().contentType(JSON.toString()).when()
                 .get(RestRoutes.BOOKMARK + "/" + id).asString();
 

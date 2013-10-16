@@ -21,30 +21,30 @@ import earth.xor.db.BookmarkDatastore;
 public class RestServer {
 
     private String usedAcceptType = "application/json";
-    private MongoClient dbclient;
     private DBCollection col;
+    private BookmarkDatastore ds;
 
     public RestServer(MongoClient dbclient) {
-        this.dbclient = dbclient;
         this.col = dbclient.getDB(DbProperties.DB_NAME).getCollection(
                 DbProperties.COL_NAME);
+        this.ds = new BookmarkDatastore(dbclient);
     }
 
     public void start() {
         addBookmarkPOSTroute();
+        addBookmarkGETbyIdRoute();
+    }
 
-        get(new Route(RestRoutes.BOOKMARK + "/:id") {
+    private void addBookmarkGETbyIdRoute() {
+        get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM) {
 
             @Override
             public Object handle(Request request, Response response) {
-                BookmarkDatastore ds = new BookmarkDatastore(dbclient);
 
-                Bookmark b = ds.getBookmark(request.params(":id"));
+                Bookmark b = ds
+                        .getBookmark(request.params(RestRoutes.ID_PARAM));
 
-                JSONObject obj = new JSONObject();
-                obj.put(DbProperties.ID, b.getId());
-                obj.put(DbProperties.TITLE, b.getTitle());
-                obj.put(DbProperties.URL, b.getUrl());
+                JSONObject obj = bookmarkToJSONObject(b);
 
                 return obj.toJSONString();
             }
@@ -75,5 +75,15 @@ public class RestServer {
 
     private JSONObject parseRequestBodyToJson(Request request) {
         return (JSONObject) JSONValue.parse(request.body());
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject bookmarkToJSONObject(Bookmark b) {
+        JSONObject obj = new JSONObject();
+
+        obj.put(DbProperties.ID, b.getId());
+        obj.put(DbProperties.TITLE, b.getTitle());
+        obj.put(DbProperties.URL, b.getUrl());
+        return obj;
     }
 }
