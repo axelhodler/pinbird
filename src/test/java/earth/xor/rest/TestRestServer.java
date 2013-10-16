@@ -54,7 +54,7 @@ public class TestRestServer {
     @Test
     public void testAddingABookmark() throws UnknownHostException, IOException {
 
-        given().body(TestJSONValues.POST_BOOKMARK_1).expect()
+        given().body(TestValues.POST_BOOKMARK_1).expect()
                 .contentType(JSON.toString()).when().post(RestRoutes.BOOKMARK);
 
         DBObject dbo = findTheDocumentAddedViaPost();
