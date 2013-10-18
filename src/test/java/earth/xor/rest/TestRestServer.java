@@ -64,6 +64,12 @@ public class TestRestServer {
     }
 
     @Test
+    public void testAccessingBookmarksHTTPoptions() {
+        expect().header("Access-Control-Allow-Origin", equalTo("*")).when()
+                .options(RestRoutes.BOOKMARKS);
+    }
+
+    @Test
     public void testAddingABookmark() throws UnknownHostException, IOException {
 
         given().body(TestValues.POST_BOOKMARK_1).expect()

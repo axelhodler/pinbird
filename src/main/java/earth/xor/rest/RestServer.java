@@ -2,6 +2,7 @@ package earth.xor.rest;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.options;
 
 import java.util.List;
 
@@ -34,6 +35,16 @@ public class RestServer {
     }
 
     public void start() {
+
+        options(new Route(RestRoutes.BOOKMARKS) {
+
+            @Override
+            public Object handle(Request request, Response response) {
+                addAccessControlAllowOriginToHeader(response);
+                return "root";
+            }
+            
+        });
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
         addGETAllBookmarks();
