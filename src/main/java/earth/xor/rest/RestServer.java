@@ -36,14 +36,15 @@ public class RestServer {
 
     public void start() {
 
-        options(new Route(RestRoutes.BOOKMARKS) {
+        options(new Route(RestRoutes.BOOKMARKS, usedAcceptType) {
 
             @Override
             public Object handle(Request request, Response response) {
                 addAccessControlAllowOriginToHeader(response);
+                response.header("Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept");
                 return "root";
             }
-            
         });
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();

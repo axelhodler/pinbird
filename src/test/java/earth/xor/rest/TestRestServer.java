@@ -67,6 +67,9 @@ public class TestRestServer {
     public void testAccessingBookmarksHTTPoptions() {
         expect().header("Access-Control-Allow-Origin", equalTo("*")).when()
                 .options(RestRoutes.BOOKMARKS);
+        expect().header("Access-Control-Allow-Headers",
+                equalTo("Origin, X-Requested-With, Content-Type, Accept"))
+                .when().options(RestRoutes.BOOKMARKS);
     }
 
     @Test
