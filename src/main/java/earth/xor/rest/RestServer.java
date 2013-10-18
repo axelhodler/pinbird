@@ -99,9 +99,12 @@ public class RestServer {
                 addAccessControlAllowOriginToHeader(response);
                 JSONObject obj = parseRequestBodyToJson(request);
 
-                BasicDBObject dbo = jsonObjectToBasicDBObject(obj);
+                JSONObject inner = (JSONObject) obj.get("bookmark");
 
-                col.insert(dbo);
+                Bookmark b = new Bookmark();
+                b.setTitle(inner.get(DbProperties.TITLE).toString());
+                b.setUrl(inner.get(DbProperties.URL).toString());
+                ds.saveBookmark(b);
 
                 return obj.toJSONString();
             }

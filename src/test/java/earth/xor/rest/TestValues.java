@@ -9,7 +9,7 @@ public class TestValues {
     private TestValues() {
     }
 
-    public static final String POST_BOOKMARK_1 = "{\"title\":\"foo\", \"url\":\"http://www.foo.org\"}";
+    public static final String POST_BOOKMARK_1 = "{\"bookmark\":{\"title\":\"foo\", \"url\":\"http://www.foo.org\"}}";
 
     public static final BasicDBObject BOOKMARK_1 = new BasicDBObject(
             DbProperties.TITLE, "foo").append(DbProperties.URL,
