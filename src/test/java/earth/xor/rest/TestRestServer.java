@@ -69,7 +69,7 @@ public class TestRestServer {
         given().body(TestValues.POST_BOOKMARK_1).expect()
                 .contentType(JSON.toString()).and()
                 .header("Access-Control-Allow-Origin", equalTo("*")).when()
-                .post(RestRoutes.BOOKMARK);
+                .post(RestRoutes.BOOKMARKS);
 
         DBObject dbo = findTheDocumentAddedViaPost();
 

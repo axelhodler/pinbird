@@ -80,7 +80,7 @@ public class RestServer {
     }
 
     private void addBookmarkPOSTroute() {
-        post(new Route(RestRoutes.BOOKMARK, usedAcceptType) {
+        post(new Route(RestRoutes.BOOKMARKS, usedAcceptType) {
 
             @Override
             public Object handle(Request request, Response response) {
