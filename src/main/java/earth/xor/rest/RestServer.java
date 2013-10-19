@@ -105,18 +105,22 @@ public class RestServer {
             @Override
             public Object handle(Request request, Response response) {
                 dealWithSameOriginPolicy(response);
-                JSONObject obj = parseRequestBodyToJson(request);
+                JSONObject main = parseRequestBodyToJson(request);
 
-                JSONObject inner = (JSONObject) obj.get("bookmark");
+                JSONObject inner = (JSONObject) main.get("bookmark");
 
-                Bookmark b = new Bookmark();
-                b.setTitle(inner.get(DbProperties.TITLE).toString());
-                b.setUrl(inner.get(DbProperties.URL).toString());
-                ds.saveBookmark(b);
+                ds.saveBookmark(jsonObjectToBookmark(inner));
 
-                return obj.toJSONString();
+                return main.toJSONString();
             }
         });
+    }
+
+    private Bookmark jsonObjectToBookmark(JSONObject inner) {
+        Bookmark b = new Bookmark();
+        b.setTitle(inner.get(DbProperties.TITLE).toString());
+        b.setUrl(inner.get(DbProperties.URL).toString());
+        return b;
     }
 
     private BasicDBObject jsonObjectToBasicDBObject(JSONObject obj) {
