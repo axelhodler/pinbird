@@ -123,12 +123,6 @@ public class RestServer {
         return b;
     }
 
-    private BasicDBObject jsonObjectToBasicDBObject(JSONObject obj) {
-        return new BasicDBObject(DbProperties.TITLE,
-                obj.get(DbProperties.TITLE)).append(DbProperties.URL,
-                obj.get(DbProperties.URL));
-    }
-
     private JSONObject parseRequestBodyToJson(Request request) {
         return (JSONObject) JSONValue.parse(request.body());
     }
