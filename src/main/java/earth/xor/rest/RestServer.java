@@ -14,7 +14,6 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 
 import earth.xor.Bookmark;
