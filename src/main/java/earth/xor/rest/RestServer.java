@@ -46,7 +46,7 @@ public class RestServer {
 
             @Override
             public Object handle(Request request, Response response) {
-                addAccessControlAllowOriginToHeader(response);
+                dealWithSameOriginPolicy(response);
                 response.header("Access-Control-Allow-Headers",
                         "Origin, X-Requested-With, Content-Type, Accept");
                 return "";
@@ -59,7 +59,7 @@ public class RestServer {
 
             @Override
             public Object handle(Request request, Response response) {
-                addAccessControlAllowOriginToHeader(response);
+                dealWithSameOriginPolicy(response);
 
                 return putAllBookmarksArrayIntoJSONObject().toJSONString(); 
             }
@@ -82,7 +82,7 @@ public class RestServer {
             @Override
             public Object handle(Request request, Response response) {
 
-                addAccessControlAllowOriginToHeader(response);
+                dealWithSameOriginPolicy(response);
                 Bookmark b = ds
                         .getBookmark(request.params(RestRoutes.ID_PARAM));
 
@@ -101,7 +101,7 @@ public class RestServer {
 
             @Override
             public Object handle(Request request, Response response) {
-                addAccessControlAllowOriginToHeader(response);
+                dealWithSameOriginPolicy(response);
                 JSONObject obj = parseRequestBodyToJson(request);
 
                 JSONObject inner = (JSONObject) obj.get("bookmark");
@@ -146,7 +146,7 @@ public class RestServer {
         return ja;
     }
 
-    private void addAccessControlAllowOriginToHeader(Response response) {
+    private void dealWithSameOriginPolicy(Response response) {
         response.header("Access-Control-Allow-Origin", "*");
     }
 }
