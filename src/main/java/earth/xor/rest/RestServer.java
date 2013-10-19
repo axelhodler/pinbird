@@ -1,8 +1,8 @@
 package earth.xor.rest;
 
 import static spark.Spark.get;
-import static spark.Spark.post;
 import static spark.Spark.options;
+import static spark.Spark.post;
 
 import java.util.List;
 
@@ -15,7 +15,6 @@ import spark.Response;
 import spark.Route;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
 import earth.xor.Bookmark;
@@ -25,12 +24,9 @@ import earth.xor.db.DbProperties;
 public class RestServer {
 
     private String usedAcceptType = "application/json";
-    private DBCollection col;
     private BookmarkDatastore ds;
 
     public RestServer(MongoClient dbclient) {
-        this.col = dbclient.getDB(DbProperties.DB_NAME).getCollection(
-                DbProperties.COL_NAME);
         this.ds = new BookmarkDatastore(dbclient);
     }
 
