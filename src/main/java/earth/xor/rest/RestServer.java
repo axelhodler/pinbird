@@ -94,7 +94,7 @@ public class RestServer {
         JSONObject jo = new JSONObject();
 
         jo.put(RestRoutes.BOOKMARK.substring(1),
-                bookmarkToJSONObject(ds.getBookmark(request
+                bookmarkToJSONObject(ds.getBookmarkById(request
                         .params(RestRoutes.ID_PARAM))));
         return jo;
     }

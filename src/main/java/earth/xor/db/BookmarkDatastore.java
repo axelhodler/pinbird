@@ -31,7 +31,7 @@ public class BookmarkDatastore {
                 DbProperties.URL, b.getUrl());
     }
 
-    public Bookmark getBookmark(String id) {
+    public Bookmark getBookmarkById(String id) {
         DBObject dbo = col.findOne(new BasicDBObject(DbProperties.ID,
                 new ObjectId(id)));
         Bookmark bm = createBookmarkFromDBObject(dbo);

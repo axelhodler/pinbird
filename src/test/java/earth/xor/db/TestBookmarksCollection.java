@@ -68,7 +68,7 @@ public class TestBookmarksCollection {
         DBObject dbo = col.findOne(new BasicDBObject(DbProperties.TITLE, "foo"));
         String id = dbo.get(DbProperties.ID).toString();
 
-        assertEquals(id, ds.getBookmark(id).getId());
+        assertEquals(id, ds.getBookmarkById(id).getId());
     }
 
     @Test
