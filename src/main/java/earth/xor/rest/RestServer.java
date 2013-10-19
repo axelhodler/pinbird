@@ -31,6 +31,10 @@ public class RestServer {
     }
 
     public void start() {
+        createTheRestOperationRoutes();
+    }
+
+    private void createTheRestOperationRoutes() {
         addOPTIONStoRoot();
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
