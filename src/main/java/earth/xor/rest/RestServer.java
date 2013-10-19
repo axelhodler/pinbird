@@ -57,19 +57,21 @@ public class RestServer {
     private void addGETAllBookmarks() {
         get(new Route(RestRoutes.BOOKMARKS, usedAcceptType) {
 
-            @SuppressWarnings("unchecked")
             @Override
             public Object handle(Request request, Response response) {
                 addAccessControlAllowOriginToHeader(response);
-                List<Bookmark> allBookmarks = ds.getAllBookmarks();
 
-                JSONArray ja = addBookmarksToJSONArray(allBookmarks);
-
-                JSONObject jo = new JSONObject();
-                jo.put(RestRoutes.BOOKMARKS.substring(1), ja);
-                return jo.toJSONString();
+                return putAllBookmarksArrayIntoJSONObject().toJSONString(); 
             }
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject putAllBookmarksArrayIntoJSONObject() {
+        JSONObject jo = new JSONObject();
+        jo.put(RestRoutes.BOOKMARKS.substring(1),
+                addBookmarksToJSONArray(ds.getAllBookmarks()));
+        return jo;
     }
 
     private void addBookmarkGETbyIdRoute() {
