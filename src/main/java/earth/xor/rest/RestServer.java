@@ -136,14 +136,18 @@ public class RestServer {
         return obj;
     }
 
-    @SuppressWarnings("unchecked")
     private JSONArray addBookmarksToJSONArray(List<Bookmark> allBookmarks) {
         JSONArray ja = new JSONArray();
 
-        for (Bookmark b : allBookmarks) {
-            ja.add(bookmarkToJSONObject(b));
-        }
+        iterateBookmarksAndAddToJSONArray(allBookmarks, ja);
         return ja;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void iterateBookmarksAndAddToJSONArray(List<Bookmark> allBookmarks,
+            JSONArray ja) {
+        for (Bookmark b : allBookmarks)
+            ja.add(bookmarkToJSONObject(b));
     }
 
     private void dealWithSameOriginPolicy(Response response) {
