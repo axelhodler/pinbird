@@ -52,7 +52,7 @@ public class TestRestServer {
         startEmbeddedAndClient();
 
         rs = new RestServer(client);
-        rs.start();
+        rs.setUp();
 
         RestAssured.port = 4567;
     }

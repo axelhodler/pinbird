@@ -30,7 +30,7 @@ public class RestServer {
         this.ds = new BookmarkDatastore(dbclient);
     }
 
-    public void start() {
+    public void setUp() {
         createTheRestOperationRoutes();
     }
 

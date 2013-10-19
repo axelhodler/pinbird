@@ -17,6 +17,6 @@ public class Main {
         MongoClient client = new MongoClient(mongoUri);
 
         RestServer rest = new RestServer(client);
-        rest.start();
+        rest.setUp();
     }
 }
