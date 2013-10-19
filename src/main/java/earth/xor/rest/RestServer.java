@@ -35,13 +35,13 @@ public class RestServer {
     }
 
     private void createTheRestOperationRoutes() {
-        addOPTIONStoRoot();
+        addOptionsToBookmarks();
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
         addGETAllBookmarks();
     }
 
-    private void addOPTIONStoRoot() {
+    private void addOptionsToBookmarks() {
         options(new Route(RestRoutes.BOOKMARKS, usedAcceptType) {
 
             @Override
@@ -49,7 +49,7 @@ public class RestServer {
                 addAccessControlAllowOriginToHeader(response);
                 response.header("Access-Control-Allow-Headers",
                         "Origin, X-Requested-With, Content-Type, Accept");
-                return "root";
+                return "";
             }
         });
     }
