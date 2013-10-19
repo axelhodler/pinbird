@@ -97,20 +97,25 @@ public class TestRestServer {
 
         DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
 
-        String id = addedDoc.get(DbProperties.ID).toString();
+        String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
 
         String jsonResponse = expect().contentType(JSON.toString()).and()
                 .header("Access-Control-Allow-Origin", equalTo("*")).when()
-                .get(RestRoutes.BOOKMARK + "/" + id).asString();
+                .get(RestRoutes.BOOKMARK + "/" + idOfJustAddedDoc).asString();
 
-        JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
+        JSONObject bookmark = createBookmarkFromResponse(jsonResponse);
 
-        JSONObject bookmark = (JSONObject) jso.get("bookmark");
-
-        assertEquals(id, bookmark.get(DbProperties.ID).toString());
+        assertEquals(idOfJustAddedDoc, bookmark.get(DbProperties.ID).toString());
         assertEquals("foo", bookmark.get(DbProperties.TITLE).toString());
         assertEquals("http://www.foo.org", bookmark.get(DbProperties.URL)
                 .toString());
+    }
+
+    private JSONObject createBookmarkFromResponse(String jsonResponse) {
+        JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
+
+        JSONObject bookmark = (JSONObject) jso.get("bookmark");
+        return bookmark;
     }
 
     @Test
