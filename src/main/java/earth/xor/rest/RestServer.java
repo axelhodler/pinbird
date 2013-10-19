@@ -61,7 +61,7 @@ public class RestServer {
             public Object handle(Request request, Response response) {
                 dealWithSameOriginPolicy(response);
 
-                return putAllBookmarksArrayIntoJSONObject().toJSONString(); 
+                return putAllBookmarksArrayIntoJSONObject().toJSONString();
             }
         });
     }
@@ -77,23 +77,26 @@ public class RestServer {
     private void addBookmarkGETbyIdRoute() {
         get(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM,
                 usedAcceptType) {
-
-            @SuppressWarnings("unchecked")
             @Override
             public Object handle(Request request, Response response) {
-
                 dealWithSameOriginPolicy(response);
-                Bookmark b = ds
-                        .getBookmark(request.params(RestRoutes.ID_PARAM));
 
-                JSONObject outerObject = new JSONObject();
+                JSONObject jo = putRetrievedBookmarkIntoJSONObject(request);
 
-                JSONObject innerObject = bookmarkToJSONObject(b);
-                outerObject.put(RestRoutes.BOOKMARK.substring(1), innerObject);
-
-                return outerObject.toJSONString();
+                return jo.toJSONString();
             }
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject putRetrievedBookmarkIntoJSONObject(
+            Request request) {
+        JSONObject jo = new JSONObject();
+
+        jo.put(RestRoutes.BOOKMARK.substring(1),
+                bookmarkToJSONObject(ds.getBookmark(request
+                        .params(RestRoutes.ID_PARAM))));
+        return jo;
     }
 
     private void addBookmarkPOSTroute() {
