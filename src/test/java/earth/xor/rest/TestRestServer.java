@@ -46,6 +46,11 @@ public class TestRestServer {
         return dbo;
     }
 
+    private void checkIfSameOriginPolicyAllowed(String route) {
+        expect().header("Access-Control-Allow-Origin", equalTo("*")).when()
+        .options(route);
+    }
+
     @BeforeClass
     public static void setUpMongoAndServer() throws UnknownHostException,
             IOException {
@@ -65,12 +70,12 @@ public class TestRestServer {
 
     @Test
     public void testAccessingBookmarksHTTPoptions() {
-        expect().header("Access-Control-Allow-Origin", equalTo("*")).when()
-                .options(RestRoutes.BOOKMARKS);
+        checkIfSameOriginPolicyAllowed(RestRoutes.BOOKMARKS);
         expect().header("Access-Control-Allow-Headers",
                 equalTo("Origin, X-Requested-With, Content-Type, Accept"))
                 .when().options(RestRoutes.BOOKMARKS);
     }
+
 
     @Test
     public void testAddingABookmark() throws UnknownHostException, IOException {
