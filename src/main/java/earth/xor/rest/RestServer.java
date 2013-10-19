@@ -35,7 +35,13 @@ public class RestServer {
     }
 
     public void start() {
+        addOPTIONStoRoot();
+        addBookmarkPOSTroute();
+        addBookmarkGETbyIdRoute();
+        addGETAllBookmarks();
+    }
 
+    private void addOPTIONStoRoot() {
         options(new Route(RestRoutes.BOOKMARKS, usedAcceptType) {
 
             @Override
@@ -46,9 +52,6 @@ public class RestServer {
                 return "root";
             }
         });
-        addBookmarkPOSTroute();
-        addBookmarkGETbyIdRoute();
-        addGETAllBookmarks();
     }
 
     private void addGETAllBookmarks() {
