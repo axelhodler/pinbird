@@ -80,9 +80,7 @@ public class RestServer {
             public Object handle(Request request, Response response) {
                 dealWithSameOriginPolicy(response);
 
-                JSONObject jo = putRetrievedBookmarkIntoJSONObject(request);
-
-                return jo.toJSONString();
+                return putRetrievedBookmarkIntoJSONObject(request).toJSONString();
             }
         });
     }
