@@ -51,6 +51,12 @@ public class TestRestServer {
         .options(route);
     }
 
+    private void insertThreeBookmarks() {
+        col.insert(TestValues.BOOKMARK_1);
+        col.insert(TestValues.BOOKMARK_2);
+        col.insert(TestValues.BOOKMARK_3);
+    }
+
     @BeforeClass
     public static void setUpMongoAndServer() throws UnknownHostException,
             IOException {
@@ -121,15 +127,12 @@ public class TestRestServer {
     @Test
     public void testGettingAllBookmarks() {
 
-        col.insert(TestValues.BOOKMARK_1);
-        col.insert(TestValues.BOOKMARK_2);
-        col.insert(TestValues.BOOKMARK_3);
+        insertThreeBookmarks();
 
         String jsonResponse = expect().contentType(JSON.toString()).and()
                 .header("Access-Control-Allow-Origin", equalTo("*")).when()
                 .get(RestRoutes.BOOKMARKS).asString();
 
-        System.out.println(jsonResponse);
         JSONObject jo = (JSONObject) JSONValue.parse(jsonResponse);
 
         JSONArray ja = (JSONArray) jo.get("bookmarks");
