@@ -57,6 +57,21 @@ public class TestRestServer {
         col.insert(TestValues.BOOKMARK_3);
     }
 
+    private JSONObject createBookmarkFromResponse(String jsonResponse) {
+        JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
+        
+        JSONObject bookmark = (JSONObject) extractTheBookmarkObject(jso);
+        return bookmark;
+    }
+    
+    private Object extractTheBookmarkObject(JSONObject jso) {
+        return jso.get(RestRoutes.BOOKMARK.substring(1));
+    }
+
+    private JSONArray extractTheArrayOfBookmarks(JSONObject jo) {
+        return (JSONArray) jo.get(RestRoutes.BOOKMARKS.substring(1));
+    }
+
     @BeforeClass
     public static void setUpMongoAndServer() throws UnknownHostException,
             IOException {
@@ -117,12 +132,6 @@ public class TestRestServer {
                 .toString());
     }
 
-    private JSONObject createBookmarkFromResponse(String jsonResponse) {
-        JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
-
-        JSONObject bookmark = (JSONObject) jso.get("bookmark");
-        return bookmark;
-    }
 
     @Test
     public void testGettingAllBookmarks() {
@@ -135,13 +144,14 @@ public class TestRestServer {
 
         JSONObject jo = (JSONObject) JSONValue.parse(jsonResponse);
 
-        JSONArray ja = (JSONArray) jo.get("bookmarks");
+        JSONArray ja = extractTheArrayOfBookmarks(jo);
 
         JSONObject firstObject = (JSONObject) ja.get(0);
 
         assertEquals(3, ja.size());
         assertEquals("foo", firstObject.get(DbProperties.TITLE));
     }
+
 
     @After
     public void dropDatabase() {
