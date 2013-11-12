@@ -144,7 +144,7 @@ public class TestRestServer {
 
         expect().contentType(JSON.toString()).and()
                 .header("Access-Control-Allow-Origin", equalTo("*")).when()
-                .delete(RestRoutes.BOOKMARK + "/" + idOfJustAddedDoc);
+                .delete(RestRoutes.BOOKMARKS + "/" + idOfJustAddedDoc);
         try {
             BookmarkDatastore ds = new BookmarkDatastore(client);
             ds.getBookmarkById(idOfJustAddedDoc);

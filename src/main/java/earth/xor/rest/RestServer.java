@@ -36,10 +36,25 @@ public class RestServer {
 
     private void createTheRestOperationRoutes() {
         addOptionsToBookmarks();
+        addOptionsForDeletion();
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
         addDeleteBookmarkByIdRoute();
         addGETAllBookmarks();
+    }
+
+    private void addOptionsForDeletion() {
+        options(new Route(RestRoutes.BOOKMARKS + "/" + RestRoutes.ID_PARAM, usedAcceptType) {
+
+            @Override
+            public Object handle(Request request, Response response) {
+                dealWithSameOriginPolicy(response);
+                response.header("Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept");
+                response.header("Access-Control-Allow-Methods", "DELETE");
+                return "";
+            }
+        });
     }
 
     private void addOptionsToBookmarks() {
@@ -88,7 +103,7 @@ public class RestServer {
     }
 
     private void addDeleteBookmarkByIdRoute() {
-        delete(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM, usedAcceptType) {
+        delete(new Route(RestRoutes.BOOKMARKS + "/" + RestRoutes.ID_PARAM, usedAcceptType) {
             @Override
             public Object handle(Request request, Response response) {
                 dealWithSameOriginPolicy(response);
