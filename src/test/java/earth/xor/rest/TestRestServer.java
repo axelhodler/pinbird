@@ -4,12 +4,12 @@ import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -99,6 +99,20 @@ public class TestRestServer {
                 .when().options(RestRoutes.BOOKMARKS);
     }
 
+    @Test
+    public void testAccessingTheOptionsWithIdInUrl() {
+        col.insert(TestValues.BOOKMARK_1);
+
+        DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
+
+        String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
+
+        String route = RestRoutes.BOOKMARKS + "/" + idOfJustAddedDoc;
+        checkIfSameOriginPolicyAllowed(route);
+
+        expect().header("Access-Control-Allow-Methods", equalTo("DELETE")).when()
+        .options(route);
+    }
 
     @Test
     public void testAddingABookmark() throws UnknownHostException, IOException {
