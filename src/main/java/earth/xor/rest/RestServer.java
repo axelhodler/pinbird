@@ -3,6 +3,7 @@ package earth.xor.rest;
 import static spark.Spark.get;
 import static spark.Spark.options;
 import static spark.Spark.post;
+import static spark.Spark.delete;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class RestServer {
         addOptionsToBookmarks();
         addBookmarkPOSTroute();
         addBookmarkGETbyIdRoute();
+        addDeleteBookmarkByIdRoute();
         addGETAllBookmarks();
     }
 
@@ -81,6 +83,17 @@ public class RestServer {
                 dealWithSameOriginPolicy(response);
 
                 return putRetrievedBookmarkIntoJSONObject(request).toJSONString();
+            }
+        });
+    }
+
+    private void addDeleteBookmarkByIdRoute() {
+        delete(new Route(RestRoutes.BOOKMARK + "/" + RestRoutes.ID_PARAM, usedAcceptType) {
+            @Override
+            public Object handle(Request request, Response response) {
+                dealWithSameOriginPolicy(response);
+                ds.deleteBookmarkById(request.params(RestRoutes.ID_PARAM));
+                return "deleted";
             }
         });
     }
