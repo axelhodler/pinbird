@@ -1,6 +1,7 @@
 package earth.xor.db;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -78,6 +79,23 @@ public class TestBookmarksCollection {
 
         List<Bookmark> allBookmarks = ds.getAllBookmarks();
         assertEquals(3, allBookmarks.size());
+    }
+
+    @Test
+    public void testDeletingABookmark() {
+        Bookmark b = createExampleBookmark();
+        ds.saveBookmark(b);
+
+        DBCollection col = getBookmarksCollection();
+        DBObject dbo = col.findOne(new BasicDBObject(DbProperties.TITLE, "foo"));
+        String id = dbo.get(DbProperties.ID).toString();
+
+        ds.deleteBookmarkById(id);
+
+        try {
+            ds.getBookmarkById(id);
+            fail("there should be a NullPointerException");
+        } catch(NullPointerException e) {}
     }
 
     @After

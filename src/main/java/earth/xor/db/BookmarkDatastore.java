@@ -60,4 +60,8 @@ public class BookmarkDatastore {
             allBookmarks.add(createBookmarkFromDBObject(curs.next()));
         }
     }
+
+    public void deleteBookmarkById(String id) {
+        col.remove(new BasicDBObject("_id", new ObjectId(id)));
+    }
 }
