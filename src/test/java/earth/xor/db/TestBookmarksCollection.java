@@ -60,17 +60,23 @@ public class TestBookmarksCollection {
                 .drop();
     }
 
-    @Test
-    public void testSaveAndGetBookmarkById() {
+    private String saveBookmarkAndGetItsId() {
         Bookmark b = createExampleBookmark();
         ds.saveBookmark(b);
-
+        
         DBCollection col = getBookmarksCollection();
         DBObject dbo = col.findOne(new BasicDBObject(DbProperties.TITLE, "foo"));
         String id = dbo.get(DbProperties.ID).toString();
+        return id;
+    }
+
+    @Test
+    public void testSaveAndGetBookmarkById() {
+        String id = saveBookmarkAndGetItsId();
 
         assertEquals(id, ds.getBookmarkById(id).getId());
     }
+
 
     @Test
     public void testGettingAllBookmarks() {
@@ -83,12 +89,7 @@ public class TestBookmarksCollection {
 
     @Test
     public void testDeletingABookmark() {
-        Bookmark b = createExampleBookmark();
-        ds.saveBookmark(b);
-
-        DBCollection col = getBookmarksCollection();
-        DBObject dbo = col.findOne(new BasicDBObject(DbProperties.TITLE, "foo"));
-        String id = dbo.get(DbProperties.ID).toString();
+        String id = saveBookmarkAndGetItsId();
 
         ds.deleteBookmarkById(id);
 
