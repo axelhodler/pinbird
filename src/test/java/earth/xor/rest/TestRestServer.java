@@ -32,14 +32,13 @@ public class TestRestServer {
 
     private static RestServer rs;
     private static MongoClient client;
+    private DBCollection col;
 
     private static void startEmbeddedAndClient() throws UnknownHostException,
             IOException {
         EmbeddedMongo.startEmbeddedMongo(DbProperties.EMBEDDED_PORT);
         client = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
     }
-
-    private DBCollection col;
 
     private DBObject findTheDocumentAddedViaPost() {
         DBObject dbo = client.getDB(DbProperties.DB_NAME)
@@ -60,18 +59,25 @@ public class TestRestServer {
     }
 
     private JSONObject createBookmarkFromResponse(String jsonResponse) {
-        JSONObject jso = (JSONObject) JSONValue.parse(jsonResponse);
+        JSONObject jsonObj = (JSONObject) JSONValue.parse(jsonResponse);
         
-        JSONObject bookmark = (JSONObject) extractTheBookmarkObject(jso);
+        JSONObject bookmark = (JSONObject) extractTheBookmarkObject(jsonObj);
         return bookmark;
     }
     
-    private Object extractTheBookmarkObject(JSONObject jso) {
-        return jso.get(RestRoutes.BOOKMARK.substring(1));
+    private Object extractTheBookmarkObject(JSONObject jsonObj) {
+        return jsonObj.get(RestRoutes.BOOKMARK.substring(1));
     }
 
-    private JSONArray extractTheArrayOfBookmarks(JSONObject jo) {
-        return (JSONArray) jo.get(RestRoutes.BOOKMARKS.substring(1));
+    private JSONArray extractTheArrayOfBookmarks(JSONObject jsonObj) {
+        return (JSONArray) jsonObj.get(RestRoutes.BOOKMARKS.substring(1));
+    }
+
+    private String getIdOfSavedBookmark() {
+        col.insert(TestValues.BOOKMARK_1);
+        DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
+        String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
+        return idOfJustAddedDoc;
     }
 
     @BeforeClass
@@ -86,13 +92,13 @@ public class TestRestServer {
     }
 
     @Before
-    public void setUp() {
+    public void setUpTheCollection() {
         this.col = client.getDB(DbProperties.DB_NAME).getCollection(
                 DbProperties.COL_NAME);
     }
 
     @Test
-    public void testAccessingBookmarksHTTPoptions() {
+    public void testBookmarksOPTIONS() {
         checkIfSameOriginPolicyAllowed(RestRoutes.BOOKMARKS);
         expect().header(HttpHeaders.ACAHeaders,
                 equalTo("Origin, X-Requested-With, Content-Type, Accept"))
@@ -100,12 +106,8 @@ public class TestRestServer {
     }
 
     @Test
-    public void testAccessingTheOptionsWithIdInUrl() {
-        col.insert(TestValues.BOOKMARK_1);
-
-        DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
-
-        String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
+    public void testBookmarksOPTIONSwithIdInUrl() {
+        String idOfJustAddedDoc = getIdOfSavedBookmark();
 
         String route = RestRoutes.BOOKMARKS + "/" + idOfJustAddedDoc;
         checkIfSameOriginPolicyAllowed(route);
@@ -114,9 +116,9 @@ public class TestRestServer {
         .options(route);
     }
 
-    @Test
-    public void testAddingABookmark() throws UnknownHostException, IOException {
 
+    @Test
+    public void testBookmarksPOST() throws UnknownHostException, IOException {
         given().body(TestValues.POST_BOOKMARK_1).expect()
                 .contentType(JSON.toString()).and()
                 .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
@@ -129,12 +131,7 @@ public class TestRestServer {
 
     @Test
     public void testGettingABookmarkViaId() {
-
-        col.insert(TestValues.BOOKMARK_1);
-
-        DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
-
-        String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
+        String idOfJustAddedDoc = getIdOfSavedBookmark();
 
         String jsonResponse = expect().contentType(JSON.toString()).and()
                 .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
@@ -150,11 +147,7 @@ public class TestRestServer {
 
     @Test
     public void testDeletingABookMarkViaId() {
-        col.insert(TestValues.BOOKMARK_1);
-
-        DBObject addedDoc = col.findOne(TestValues.BOOKMARK_1);
-
-        String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
+        String idOfJustAddedDoc = getIdOfSavedBookmark();
 
         expect().contentType(JSON.toString()).and()
                 .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
@@ -168,26 +161,24 @@ public class TestRestServer {
 
     @Test
     public void testGettingAllBookmarks() {
-
         insertThreeBookmarks();
 
         String jsonResponse = expect().contentType(JSON.toString()).and()
                 .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
                 .get(RestRoutes.BOOKMARKS).asString();
 
-        JSONObject jo = (JSONObject) JSONValue.parse(jsonResponse);
+        JSONObject jsonObj = (JSONObject) JSONValue.parse(jsonResponse);
+        JSONArray jsonArr = extractTheArrayOfBookmarks(jsonObj);
 
-        JSONArray ja = extractTheArrayOfBookmarks(jo);
+        JSONObject firstObject = (JSONObject) jsonArr.get(0);
 
-        JSONObject firstObject = (JSONObject) ja.get(0);
-
-        assertEquals(3, ja.size());
+        assertEquals(3, jsonArr.size());
         assertEquals("foo", firstObject.get(DbProperties.TITLE));
     }
 
 
     @After
-    public void dropDatabase() {
+    public void dropCollection() {
         col.drop();
     }
 }
