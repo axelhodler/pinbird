@@ -49,7 +49,7 @@ public class TestRestServer {
     }
 
     private void checkIfSameOriginPolicyAllowed(String route) {
-        expect().header("Access-Control-Allow-Origin", equalTo("*")).when()
+        expect().header(HttpHeaders.ACAOrigin, equalTo("*")).when()
         .options(route);
     }
 
@@ -94,7 +94,7 @@ public class TestRestServer {
     @Test
     public void testAccessingBookmarksHTTPoptions() {
         checkIfSameOriginPolicyAllowed(RestRoutes.BOOKMARKS);
-        expect().header("Access-Control-Allow-Headers",
+        expect().header(HttpHeaders.ACAHeaders,
                 equalTo("Origin, X-Requested-With, Content-Type, Accept"))
                 .when().options(RestRoutes.BOOKMARKS);
     }
@@ -110,7 +110,7 @@ public class TestRestServer {
         String route = RestRoutes.BOOKMARKS + "/" + idOfJustAddedDoc;
         checkIfSameOriginPolicyAllowed(route);
 
-        expect().header("Access-Control-Allow-Methods", equalTo("DELETE")).when()
+        expect().header(HttpHeaders.ACAMethods, equalTo("DELETE")).when()
         .options(route);
     }
 
@@ -119,7 +119,7 @@ public class TestRestServer {
 
         given().body(TestValues.POST_BOOKMARK_1).expect()
                 .contentType(JSON.toString()).and()
-                .header("Access-Control-Allow-Origin", equalTo("*")).when()
+                .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
                 .post(RestRoutes.BOOKMARKS);
 
         DBObject dbo = findTheDocumentAddedViaPost();
@@ -137,7 +137,7 @@ public class TestRestServer {
         String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
 
         String jsonResponse = expect().contentType(JSON.toString()).and()
-                .header("Access-Control-Allow-Origin", equalTo("*")).when()
+                .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
                 .get(RestRoutes.BOOKMARK + "/" + idOfJustAddedDoc).asString();
 
         JSONObject bookmark = createBookmarkFromResponse(jsonResponse);
@@ -157,7 +157,7 @@ public class TestRestServer {
         String idOfJustAddedDoc = addedDoc.get(DbProperties.ID).toString();
 
         expect().contentType(JSON.toString()).and()
-                .header("Access-Control-Allow-Origin", equalTo("*")).when()
+                .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
                 .delete(RestRoutes.BOOKMARKS + "/" + idOfJustAddedDoc);
         try {
             BookmarkDatastore ds = new BookmarkDatastore(client);
@@ -172,7 +172,7 @@ public class TestRestServer {
         insertThreeBookmarks();
 
         String jsonResponse = expect().contentType(JSON.toString()).and()
-                .header("Access-Control-Allow-Origin", equalTo("*")).when()
+                .header(HttpHeaders.ACAOrigin, equalTo("*")).when()
                 .get(RestRoutes.BOOKMARKS).asString();
 
         JSONObject jo = (JSONObject) JSONValue.parse(jsonResponse);

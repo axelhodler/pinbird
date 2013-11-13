@@ -49,9 +49,9 @@ public class RestServer {
             @Override
             public Object handle(Request request, Response response) {
                 dealWithSameOriginPolicy(response);
-                response.header("Access-Control-Allow-Headers",
+                response.header(HttpHeaders.ACAHeaders,
                         "Origin, X-Requested-With, Content-Type, Accept");
-                response.header("Access-Control-Allow-Methods", "DELETE");
+                response.header(HttpHeaders.ACAMethods, "DELETE");
                 return "";
             }
         });
@@ -63,7 +63,7 @@ public class RestServer {
             @Override
             public Object handle(Request request, Response response) {
                 dealWithSameOriginPolicy(response);
-                response.header("Access-Control-Allow-Headers",
+                response.header(HttpHeaders.ACAHeaders,
                         "Origin, X-Requested-With, Content-Type, Accept");
                 return "";
             }
@@ -177,6 +177,6 @@ public class RestServer {
     }
 
     private void dealWithSameOriginPolicy(Response response) {
-        response.header("Access-Control-Allow-Origin", "*");
+        response.header(HttpHeaders.ACAOrigin, "*");
     }
 }
