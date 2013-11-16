@@ -16,6 +16,7 @@ import org.json.simple.JSONValue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.jayway.restassured.RestAssured;
@@ -88,7 +89,7 @@ public class TestRestServer {
         rs = new RestServer(client);
         rs.setUp();
 
-        RestAssured.port = 4567;
+//        RestAssured.port = 4567;
     }
 
     @Before
@@ -97,6 +98,7 @@ public class TestRestServer {
                 DbProperties.COL_NAME);
     }
 
+    @Ignore
     @Test
     public void testBookmarksOPTIONS() {
         checkIfSameOriginPolicyAllowed(RestRoutes.BOOKMARKS);
@@ -105,6 +107,7 @@ public class TestRestServer {
                 .when().options(RestRoutes.BOOKMARKS);
     }
 
+    @Ignore
     @Test
     public void testBookmarksOPTIONSwithIdInUrl() {
         String idOfJustAddedDoc = getIdOfSavedBookmark();
@@ -116,7 +119,7 @@ public class TestRestServer {
         .options(route);
     }
 
-
+    @Ignore
     @Test
     public void testBookmarksPOST() throws UnknownHostException, IOException {
         given().body(TestValues.POST_BOOKMARK_1).expect()
@@ -129,6 +132,7 @@ public class TestRestServer {
         assertEquals("foo", dbo.get(DbProperties.TITLE).toString());
     }
 
+    @Ignore
     @Test
     public void testGettingABookmarkViaId() {
         String idOfJustAddedDoc = getIdOfSavedBookmark();
@@ -145,6 +149,7 @@ public class TestRestServer {
                 .toString());
     }
 
+    @Ignore
     @Test
     public void testDeletingABookMarkViaId() {
         String idOfJustAddedDoc = getIdOfSavedBookmark();
@@ -159,6 +164,7 @@ public class TestRestServer {
         } catch (NullPointerException e) {}
     }
 
+    @Ignore
     @Test
     public void testGettingAllBookmarks() {
         insertThreeBookmarks();
@@ -175,7 +181,6 @@ public class TestRestServer {
         assertEquals(3, jsonArr.size());
         assertEquals("foo", firstObject.get(DbProperties.TITLE));
     }
-
 
     @After
     public void dropCollection() {
