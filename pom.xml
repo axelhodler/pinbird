@@ -22,6 +22,14 @@
 			<groupId>com.jayway.restassured</groupId>
 			<artifactId>rest-assured</artifactId>
 			<version>1.8.1</version>
+			<exclusions>
+				<!-- Exclude Groovy because of issue with never asm version than jersey
+					can handle -->
+				<exclusion>
+					<groupId>org.codehaus.groovy</groupId>
+					<artifactId>groovy</artifactId>
+				</exclusion>
+			</exclusions>
 			<scope>test</scope>
 		</dependency>
 
