@@ -12,11 +12,12 @@ public class GrizzlyServer {
     private HttpServer server;
 
     public void startServer() {
-        final ResourceConfig rc = new ResourceConfig().packages("earth.xor.server");
+        final ResourceConfig rc = new ResourceConfig()
+                .packages("earth.xor.server");
 
         server = GrizzlyHttpServerFactory.createHttpServer(
                 UriBuilder.fromUri("http://0.0.0.0/")
-                        .port(5000).build(),
+                        .port(Integer.valueOf(System.getenv("PORT"))).build(),
                 rc);
     }
 
