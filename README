@@ -1,4 +1,0 @@
-pinbird server
-
-#issue
-can't run tests (mvn test) if the testserver runs locally
