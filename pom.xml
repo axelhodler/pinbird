@@ -16,14 +16,14 @@
 
 	<dependencies>
 		<!-- Java DSL for easy testing of REST services -->
-		<!-- Should place before JUnit in order to make sure that the correct version 
+		<!-- Should place before JUnit in order to make sure that the correct version
 			of Hamcrest is used -->
 		<dependency>
 			<groupId>com.jayway.restassured</groupId>
 			<artifactId>rest-assured</artifactId>
 			<version>1.8.1</version>
 			<exclusions>
-				<!-- Exclude Groovy because of issue with never asm version than jersey
+				<!-- Exclude Groovy because of issue with never asm version than jersey 
 					can handle -->
 				<exclusion>
 					<groupId>org.codehaus.groovy</groupId>
@@ -78,6 +78,7 @@
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-grizzly2</artifactId>
 			<version>2.4.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
