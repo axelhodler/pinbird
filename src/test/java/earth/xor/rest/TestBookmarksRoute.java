@@ -21,7 +21,7 @@ import com.mongodb.MongoClientURI;
 import earth.xor.db.DbProperties;
 import earth.xor.db.EmbeddedMongo;
 
-public class TestBookmarksRest extends JerseyTest{
+public class TestBookmarksRoute extends JerseyTest{
 
     private static MongoClient client;
     private DBCollection col;
