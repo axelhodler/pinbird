@@ -8,7 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("bookmarks")
-public class Bookmarks {
+public class BookmarksRoute {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

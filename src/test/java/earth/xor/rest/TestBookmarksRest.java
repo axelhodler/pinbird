@@ -13,7 +13,7 @@ public class TestBookmarksRest extends JerseyTest{
  
     @Override
     protected Application configure() {
-        return new ResourceConfig(Bookmarks.class);
+        return new ResourceConfig(BookmarksRoute.class);
     }
  
     @Test
