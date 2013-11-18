@@ -1,7 +1,8 @@
 package earth.xor.rest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
+import javax.json.JsonObject;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -17,7 +18,7 @@ public class TestBookmarksRest extends JerseyTest{
  
     @Test
     public void test() {
-        final String hello = target("bookmarks").request().get(String.class);
-        assertEquals("Got it", hello);
+        final JsonObject jo = target("bookmarks").request().get(JsonObject.class);
+        assertEquals("Agamemnon", jo.getJsonString("name").getString());
     }
 }
