@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Application;
 
@@ -18,10 +19,12 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
+import earth.xor.Bookmark;
+import earth.xor.db.BookmarkDatastore;
 import earth.xor.db.DbProperties;
 import earth.xor.db.EmbeddedMongo;
 
-public class TestBookmarksRoute extends JerseyTest{
+public class TestBookmarksRoute extends JerseyTest {
 
     private static MongoClient client;
     private DBCollection col;
@@ -53,8 +56,21 @@ public class TestBookmarksRoute extends JerseyTest{
     }
 
     @Test
-    public void test() {
-        final JsonObject jo = target("bookmarks").request().get(JsonObject.class);
-        assertEquals("Agamemnon", jo.getJsonString("name").getString());
+    public void testGettingAllBookmarks() {
+        Bookmark bm = new Bookmark();
+        bm.setTitle("foo");
+        bm.setUrl("http://www.foo.org");
+
+        BookmarkDatastore ds = new BookmarkDatastore(client);
+        ds.saveBookmark(bm);
+
+        final JsonObject jo = target("bookmarks").request().get(
+                JsonObject.class);
+        JsonArray ja = jo.getJsonArray("bookmarks");
+
+        assertEquals("foo", ja.getJsonObject(0).getJsonString("title")
+                .getString());
+        assertEquals("http://www.foo.org",
+                ja.getJsonObject(0).getJsonString("url").getString());
     }
 }
