@@ -19,11 +19,11 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.jayway.restassured.RestAssured;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 import earth.xor.db.BookmarkDatastore;
 import earth.xor.db.DbProperties;
@@ -37,8 +37,11 @@ public class TestRestServer {
 
     private static void startEmbeddedAndClient() throws UnknownHostException,
             IOException {
-        EmbeddedMongo.startEmbeddedMongo(DbProperties.EMBEDDED_PORT);
-        client = new MongoClient("localhost", DbProperties.EMBEDDED_PORT);
+        EmbeddedMongo.startEmbeddedMongo(Integer.valueOf(System
+                .getenv("MONGO_PORT")));
+        MongoClientURI uri = new MongoClientURI(System.getenv("URI_BASE")
+                + System.getenv("MONGO_PORT"));
+        client = new MongoClient(uri);
     }
 
     private DBObject findTheDocumentAddedViaPost() {
