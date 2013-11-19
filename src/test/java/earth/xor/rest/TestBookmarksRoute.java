@@ -39,8 +39,7 @@ public class TestBookmarksRoute extends JerseyTest {
             IOException {
         EmbeddedMongo.startEmbeddedMongo(Integer.valueOf(System
                 .getenv("MONGO_PORT")));
-        MongoClientURI uri = new MongoClientURI(System.getenv("URI_BASE")
-                + System.getenv("MONGO_PORT"));
+        MongoClientURI uri = new MongoClientURI(System.getenv("MONGO_URI"));
         client = new MongoClient(uri);
     }
 

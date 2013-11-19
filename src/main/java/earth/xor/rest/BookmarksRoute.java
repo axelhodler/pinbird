@@ -29,8 +29,7 @@ public class BookmarksRoute {
     private BookmarkDatastore ds;
 
     public BookmarksRoute() throws UnknownHostException {
-        MongoClientURI uri = new MongoClientURI(System.getenv("URI_BASE")
-                + System.getenv("MONGO_PORT"));
+        MongoClientURI uri = new MongoClientURI(System.getenv("MONGO_URI"));
         MongoClient client = new MongoClient(uri);
 
         ds = new BookmarkDatastore(client);
