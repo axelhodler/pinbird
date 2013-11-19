@@ -16,7 +16,6 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
@@ -121,11 +120,7 @@ public class TestBookmarksRoute extends JerseyTest {
 
     @Test
     public void testGettingBookmarkById() {
-        Bookmark bm1 = new Bookmark();
-        bm1.setTitle("foo");
-        bm1.setUrl("http://www.foo.org");
-
-        ds.saveBookmark(bm1);
+        createAndSaveTestBookmark();
 
         DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
         String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
@@ -139,20 +134,27 @@ public class TestBookmarksRoute extends JerseyTest {
                 .getString());
     }
 
-    @Test
-    public void testGettingBookmarkByInvalidId() {
-        assertEquals(404, target("bookmarks").path("/507f1f77bcf86cd799439011")
-                .request().get().getStatus());
-        assertEquals(400, target("bookmarks").path("/foobarbaz123").request()
-                .get().getStatus());
-    }
-    @Test
-    public void testDeletingABookmarkById() {
+    private void createAndSaveTestBookmark() {
         Bookmark bm1 = new Bookmark();
         bm1.setTitle("foo");
         bm1.setUrl("http://www.foo.org");
 
         ds.saveBookmark(bm1);
+    }
+
+    @Test
+    public void testGettingBookmarkByInvalidId() {
+        assertEquals("ObjectId does not exist", 404,
+                target("bookmarks").path("/507f1f77bcf86cd799439011").request()
+                        .get().getStatus());
+        assertEquals("Invalid ObjectId", 400,
+                target("bookmarks").path("/foobarbaz123").request().get()
+                        .getStatus());
+    }
+
+    @Test
+    public void testDeletingABookmarkById() {
+        createAndSaveTestBookmark();
 
         DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
         String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
