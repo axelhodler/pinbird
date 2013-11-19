@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/zsh
 # Call this script with one parameter for the PORT variable, for example:
 # ./run_tests.sh 5000
+
+source ~/.zshrc
 
 if [ -z "$1" ]; then
     echo -e "please provide the port as a parameter.\nExample usage:\n./run_tests.sh 1337"
@@ -15,4 +17,4 @@ export MONGO_PORT=$2
 # The URI for the MongoClient eg: "mongodb://localhost:"
 export URI_BASE=$3
 
-mvn test
+eval "mvn test"
