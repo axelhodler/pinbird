@@ -75,7 +75,7 @@ public class BookmarksRoute {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void postABookmark(JsonObject requestObject) {
+    public Response postABookmark(JsonObject requestObject) {
         Bookmark bmToSave = new Bookmark();
         JsonObject inner = requestObject.getJsonObject("bookmark");
 
@@ -83,6 +83,7 @@ public class BookmarksRoute {
         bmToSave.setUrl(inner.getJsonString("url").getString());
 
         ds.saveBookmark(bmToSave);
+        return Response.ok().header("Access-Control-Allow-Origin", "*").build();
     }
 
     @DELETE

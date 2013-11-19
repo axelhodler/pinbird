@@ -10,6 +10,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Request;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -111,8 +112,11 @@ public class TestBookmarksRoute extends JerseyTest {
         JsonObject outer = Json.createObjectBuilder().add("bookmark", inner)
                 .build();
 
-        target("bookmarks").request().post(
-                Entity.entity(outer, "application/json"));
+        assertEquals(
+                "*",
+                target("bookmarks").request()
+                        .post(Entity.entity(outer, "application/json"))
+                        .getHeaderString("Access-Control-Allow-Origin"));
 
         JsonObject jo = target("bookmarks").request().get(JsonObject.class);
         JsonArray ja = jo.getJsonArray("bookmarks");
