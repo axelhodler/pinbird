@@ -20,28 +20,39 @@ import earth.xor.db.BookmarkDatastore;
 @Path("bookmarks")
 public class BookmarksRoute {
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAllBookmarks() throws UnknownHostException {
+    private BookmarkDatastore ds;
+
+    public BookmarksRoute() throws UnknownHostException {
         MongoClientURI uri = new MongoClientURI(System.getenv("URI_BASE") + System.getenv("MONGO_PORT"));
         MongoClient client = new MongoClient(uri);
 
-        BookmarkDatastore ds = new BookmarkDatastore(client);
+        ds = new BookmarkDatastore(client);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject getAllBookmarks(){
         List<Bookmark> allBookmarks = ds.getAllBookmarks();
 
-        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-
-        for (Bookmark bm : allBookmarks) {
-            JsonObject currentBookmark = Json.createObjectBuilder()
-                    .add("title", bm.getTitle())
-                    .add("url", "http://www.foo.org")
-                    .build();
-            arrayBuilder.add(currentBookmark);
-        }
+        JsonArrayBuilder arrayBuilder = iterateAllBookmarksAndAddToArray(allBookmarks);
 
         JsonObject returnObject = Json.createObjectBuilder()
                 .add("bookmarks", arrayBuilder.build()).build();
 
         return returnObject;
+    }
+
+    private JsonArrayBuilder iterateAllBookmarksAndAddToArray(
+            List<Bookmark> allBookmarks) {
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+        for (Bookmark bm : allBookmarks) {
+            JsonObject currentBookmark = Json.createObjectBuilder()
+                    .add("title", bm.getTitle())
+                    .add("url", bm.getUrl())
+                    .build();
+            arrayBuilder.add(currentBookmark);
+        }
+        return arrayBuilder;
     }
 }

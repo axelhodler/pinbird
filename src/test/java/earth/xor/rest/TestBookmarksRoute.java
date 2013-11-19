@@ -64,7 +64,7 @@ public class TestBookmarksRoute extends JerseyTest {
         BookmarkDatastore ds = new BookmarkDatastore(client);
         ds.saveBookmark(bm);
 
-        final JsonObject jo = target("bookmarks").request().get(
+        JsonObject jo = target("bookmarks").request().get(
                 JsonObject.class);
         JsonArray ja = jo.getJsonArray("bookmarks");
 
