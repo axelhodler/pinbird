@@ -59,18 +59,20 @@ public class BookmarksRoute {
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("The id: " + id + " is an invalid ObjectId")
-                    .build();
+                    .header("Access-Control-Allow-Origin", "*").build();
         }
 
         if (bm == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Resource not found for bookmarkid: " + id).build();
+                    .entity("Resource not found for bookmarkid: " + id)
+                    .header("Access-Control-Allow-Origin", "*").build();
         }
         JsonObject inner = Json.createObjectBuilder()
                 .add("title", bm.getTitle()).add("url", bm.getUrl()).build();
         JsonObject outer = Json.createObjectBuilder().add("bookmark", inner)
                 .build();
-        return Response.ok(outer).build();
+        return Response.ok(outer).header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     @POST

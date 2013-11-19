@@ -134,6 +134,11 @@ public class TestBookmarksRoute extends JerseyTest {
         DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
         String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
 
+        assertEquals("*",
+                target("bookmarks").path("/" + idOfJustAddedBm).request()
+                        .get()
+                        .getHeaderString("Access-Control-Allow-Origin"));
+
         JsonObject jo = target("bookmarks").path("/" + idOfJustAddedBm)
                 .request().get(JsonObject.class);
 
