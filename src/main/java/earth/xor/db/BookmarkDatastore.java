@@ -31,9 +31,12 @@ public class BookmarkDatastore {
                 DbProperties.URL, b.getUrl());
     }
 
-    public Bookmark getBookmarkById(String id) {
+    public Bookmark getBookmarkById(String id) throws IllegalArgumentException {
         DBObject dbo = col.findOne(new BasicDBObject(DbProperties.ID,
                 new ObjectId(id)));
+        if (dbo == null) {
+            return null;
+        }
         Bookmark bm = createBookmarkFromDBObject(dbo);
         return bm;
     }

@@ -7,12 +7,14 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -49,13 +51,32 @@ public class BookmarksRoute {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getBookmarkById(@PathParam("id") String id) {
-        Bookmark bm = ds.getBookmarkById(id);
+    public Response getBookmarkById(@PathParam("id") String id) {
+        System.out.println("\n___________________________\n");
+        System.out.println("in the @GET " + id);
+        System.out.println("___________________________\n");
+
+        Bookmark bm = null;
+        try {
+            bm = ds.getBookmarkById(id);
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("The id: " + id + " is an invalid ObjectId")
+                    .build();
+        }
+
+        if (bm == null) {
+            System.out.println("\n___________________________\n");
+            System.out.println("equals null yes");
+            System.out.println("___________________________\n");
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Resource not found for bookmarkid: " + id).build();
+        }
         JsonObject inner = Json.createObjectBuilder()
                 .add("title", bm.getTitle()).add("url", bm.getUrl()).build();
         JsonObject outer = Json.createObjectBuilder().add("bookmark", inner)
                 .build();
-        return outer;
+        return Response.ok(outer).build();
     }
 
     @POST
@@ -68,6 +89,16 @@ public class BookmarksRoute {
         bmToSave.setUrl(inner.getJsonString("url").getString());
 
         ds.saveBookmark(bmToSave);
+    }
+
+    @DELETE
+    @Path("{id}")
+    public void deleteBookmarkById(@PathParam("id") String id) {
+
+        System.out.println("\n----------------------------\n");
+        System.out.println(id);
+        System.out.println("----------------------------\n");
+        ds.deleteBookmarkById(id);
     }
 
     private JsonArrayBuilder iterateAllBookmarksAndAddToArray(
