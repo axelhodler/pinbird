@@ -11,6 +11,7 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -64,13 +65,55 @@ public class TestBookmarksRoute extends JerseyTest {
         BookmarkDatastore ds = new BookmarkDatastore(client);
         ds.saveBookmark(bm);
 
-        JsonObject jo = target("bookmarks").request().get(
-                JsonObject.class);
+        JsonObject jo = target("bookmarks").request().get(JsonObject.class);
         JsonArray ja = jo.getJsonArray("bookmarks");
 
         assertEquals("foo", ja.getJsonObject(0).getJsonString("title")
                 .getString());
         assertEquals("http://www.foo.org",
                 ja.getJsonObject(0).getJsonString("url").getString());
+    }
+
+    @Test
+    public void testGettingAllBookmarksWhenMultipleAdded() {
+        Bookmark bm1 = new Bookmark();
+        bm1.setTitle("foo");
+        bm1.setUrl("http://www.foo.org");
+
+        Bookmark bm2 = new Bookmark();
+        bm2.setTitle("bar");
+        bm2.setUrl("http://www.bar.org");
+
+        Bookmark bm3 = new Bookmark();
+        bm3.setTitle("baz");
+        bm3.setUrl("http://www.baz.org");
+
+        BookmarkDatastore ds = new BookmarkDatastore(client);
+        ds.saveBookmark(bm1);
+        ds.saveBookmark(bm2);
+        ds.saveBookmark(bm3);
+
+        JsonObject jo = target("bookmarks").request().get(JsonObject.class);
+        JsonArray ja = jo.getJsonArray("bookmarks");
+
+        assertEquals("foo", ja.getJsonObject(0).getJsonString("title")
+                .getString());
+        assertEquals("http://www.foo.org",
+                ja.getJsonObject(0).getJsonString("url").getString());
+
+        assertEquals("bar", ja.getJsonObject(1).getJsonString("title")
+                .getString());
+        assertEquals("http://www.bar.org",
+                ja.getJsonObject(1).getJsonString("url").getString());
+
+        assertEquals("baz", ja.getJsonObject(2).getJsonString("title")
+                .getString());
+        assertEquals("http://www.baz.org",
+                ja.getJsonObject(2).getJsonString("url").getString());
+    }
+
+    @After
+    public void dropCollection() {
+        col.drop();
     }
 }
