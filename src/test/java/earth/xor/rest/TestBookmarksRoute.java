@@ -63,7 +63,6 @@ public class TestBookmarksRoute extends JerseyTest {
         this.ds = new BookmarkDatastore(client);
     }
 
-    @Ignore
     @Test
     public void testGettingAllBookmarksWhenMultipleAdded() {
         Bookmark bm1 = new Bookmark();
@@ -101,7 +100,6 @@ public class TestBookmarksRoute extends JerseyTest {
                 ja.getJsonObject(2).getJsonString("url").getString());
     }
 
-    @Ignore
     @Test
     public void testAddingBookmarkViaPost() {
         JsonObject inner = Json.createObjectBuilder().add("title", "foo")
@@ -121,7 +119,6 @@ public class TestBookmarksRoute extends JerseyTest {
                 ja.getJsonObject(0).getJsonString("url").getString());
     }
 
-    @Ignore
     @Test
     public void testGettingBookmarkById() {
         Bookmark bm1 = new Bookmark();
@@ -149,8 +146,6 @@ public class TestBookmarksRoute extends JerseyTest {
         assertEquals(400, target("bookmarks").path("/foobarbaz123").request()
                 .get().getStatus());
     }
-
-    @Ignore
     @Test
     public void testDeletingABookmarkById() {
         Bookmark bm1 = new Bookmark();
@@ -161,10 +156,6 @@ public class TestBookmarksRoute extends JerseyTest {
 
         DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
         String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
-
-        System.out.println("\n----------------------------\n");
-        System.out.println(idOfJustAddedBm);
-        System.out.println("----------------------------\n");
 
         target("bookmarks").path("/" + idOfJustAddedBm).request().delete();
 

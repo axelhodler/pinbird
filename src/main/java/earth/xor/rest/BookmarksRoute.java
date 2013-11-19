@@ -52,10 +52,6 @@ public class BookmarksRoute {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBookmarkById(@PathParam("id") String id) {
-        System.out.println("\n___________________________\n");
-        System.out.println("in the @GET " + id);
-        System.out.println("___________________________\n");
-
         Bookmark bm = null;
         try {
             bm = ds.getBookmarkById(id);
@@ -66,9 +62,6 @@ public class BookmarksRoute {
         }
 
         if (bm == null) {
-            System.out.println("\n___________________________\n");
-            System.out.println("equals null yes");
-            System.out.println("___________________________\n");
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Resource not found for bookmarkid: " + id).build();
         }
