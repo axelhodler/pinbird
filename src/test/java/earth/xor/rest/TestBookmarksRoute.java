@@ -1,7 +1,5 @@
 package earth.xor.rest;
 
-import static com.jayway.restassured.RestAssured.expect;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -12,14 +10,12 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Request;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
@@ -191,6 +187,8 @@ public class TestBookmarksRoute extends JerseyTest {
                 "Origin, X-Requested-With, Content-Type, Accept",
                 target("bookmarks").request().options()
                         .getHeaderString("Access-Control-Allow-Headers"));
+        assertEquals("GET, POST, DELETE", target("bookmarks").request()
+                .options().getHeaderString("Access-Control-Allow-Methods"));
     }
 
     @After

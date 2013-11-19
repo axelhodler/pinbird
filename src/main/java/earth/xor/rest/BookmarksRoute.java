@@ -115,6 +115,7 @@ public class BookmarksRoute {
                 .ok()
                 .header("Access-Control-Allow-Headers",
                         "Origin, X-Requested-With, Content-Type, Accept")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE")
                 .build();
     }
 }
