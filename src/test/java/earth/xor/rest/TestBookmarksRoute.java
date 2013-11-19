@@ -170,6 +170,11 @@ public class TestBookmarksRoute extends JerseyTest {
 
         target("bookmarks").path("/" + idOfJustAddedBm).request().delete();
 
+        assertEquals("*",
+                target("bookmarks").path("/" + idOfJustAddedBm).request()
+                        .delete()
+                        .getHeaderString("Access-Control-Allow-Origin"));
+
         assertEquals(404, target("bookmarks").path("/" + idOfJustAddedBm)
                 .request().get().getStatus());
     }

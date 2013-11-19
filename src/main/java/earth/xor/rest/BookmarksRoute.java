@@ -88,8 +88,9 @@ public class BookmarksRoute {
 
     @DELETE
     @Path("{id}")
-    public void deleteBookmarkById(@PathParam("id") String id) {
+    public Response deleteBookmarkById(@PathParam("id") String id) {
         ds.deleteBookmarkById(id);
+        return Response.ok().header("Access-Control-Allow-Origin", "*").build();
     }
 
     private JsonArrayBuilder iterateAllBookmarksAndAddToArray(
