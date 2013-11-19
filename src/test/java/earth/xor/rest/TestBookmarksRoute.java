@@ -57,24 +57,6 @@ public class TestBookmarksRoute extends JerseyTest {
     }
 
     @Test
-    public void testGettingAllBookmarks() {
-        Bookmark bm = new Bookmark();
-        bm.setTitle("foo");
-        bm.setUrl("http://www.foo.org");
-
-        BookmarkDatastore ds = new BookmarkDatastore(client);
-        ds.saveBookmark(bm);
-
-        JsonObject jo = target("bookmarks").request().get(JsonObject.class);
-        JsonArray ja = jo.getJsonArray("bookmarks");
-
-        assertEquals("foo", ja.getJsonObject(0).getJsonString("title")
-                .getString());
-        assertEquals("http://www.foo.org",
-                ja.getJsonObject(0).getJsonString("url").getString());
-    }
-
-    @Test
     public void testGettingAllBookmarksWhenMultipleAdded() {
         Bookmark bm1 = new Bookmark();
         bm1.setTitle("foo");
