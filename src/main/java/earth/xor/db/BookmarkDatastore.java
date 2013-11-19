@@ -18,7 +18,7 @@ public class BookmarkDatastore {
     private DBCollection col;
 
     public BookmarkDatastore(MongoClient c) {
-        this.col = c.getDB(DbProperties.DB_NAME).getCollection(
+        this.col = c.getDB(System.getenv("DB_NAME")).getCollection(
                 DbProperties.COL_NAME);
     }
 

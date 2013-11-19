@@ -44,7 +44,7 @@ public class TestRestServer {
     }
 
     private DBObject findTheDocumentAddedViaPost() {
-        DBObject dbo = client.getDB(DbProperties.DB_NAME)
+        DBObject dbo = client.getDB(System.getenv("DB_NAME"))
                 .getCollection(DbProperties.COL_NAME)
                 .findOne(new BasicDBObject(DbProperties.TITLE, "foo"));
         return dbo;
@@ -96,7 +96,7 @@ public class TestRestServer {
 
     @Before
     public void setUpTheCollection() {
-        this.col = client.getDB(DbProperties.DB_NAME).getCollection(
+        this.col = client.getDB(System.getenv("DB_NAME")).getCollection(
                 DbProperties.COL_NAME);
     }
 

@@ -43,7 +43,7 @@ public class TestBookmarksCollection {
     }
 
     private DBCollection getBookmarksCollection() {
-        return client.getDB(DbProperties.DB_NAME).getCollection(
+        return client.getDB(System.getenv("DB_NAME")).getCollection(
                 DbProperties.COL_NAME);
     }
 

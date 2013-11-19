@@ -56,7 +56,7 @@ public class TestBookmarksRoute extends JerseyTest {
 
     @Before
     public void setUpTheCollection() {
-        this.col = client.getDB(DbProperties.DB_NAME).getCollection(
+        this.col = client.getDB(System.getenv("DB_NAME")).getCollection(
                 DbProperties.COL_NAME);
         this.ds = new BookmarkDatastore(client);
     }

@@ -9,7 +9,7 @@ if [ -z "$1" ]; then
     exit 0
 fi
 
-echo -e "run tests with serverport: $1\nEmbedded Mongo Port: $2\nUri: $3\n"
+echo -e "run tests with serverport: $1\nEmbedded Mongo Port: $2\nUri: $3\nDatabase Name: $4\n"
 
 export PORT=$1
 # The port used for the EmbeddedMongo instance eg: "12345"
@@ -17,4 +17,5 @@ export MONGO_PORT=$2
 # The URI for the MongoClient eg: "mongodb://localhost:12345"
 export MONGO_URI=$3
 
+export DB_NAME=$4
 eval "mvn test"

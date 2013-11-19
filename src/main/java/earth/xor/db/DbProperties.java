@@ -5,8 +5,6 @@ public class DbProperties {
     private DbProperties() {
     }
 
-    public static final String DB_NAME = ConfigAccessor.getInstance()
-            .getDatabaseName();
     public static final int EMBEDDED_PORT = 12345;
 
     public static final String COL_NAME = "bookmarks";
