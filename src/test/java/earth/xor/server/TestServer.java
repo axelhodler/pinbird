@@ -4,11 +4,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import earth.xor.rest.GrizzlyRestServer;
+
 public class TestServer {
 
     @Test
     public void testLaunchingServer() {
-        GrizzlyServer server = new GrizzlyServer();
+        GrizzlyRestServer server = new GrizzlyRestServer();
         server.startServer();
         assertTrue(server.getServer().isStarted());
     }
