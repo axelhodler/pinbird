@@ -1,5 +1,7 @@
 package earth.xor.rest;
 
+import static com.jayway.restassured.RestAssured.expect;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
@@ -134,10 +137,8 @@ public class TestBookmarksRoute extends JerseyTest {
         DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
         String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
 
-        assertEquals("*",
-                target("bookmarks").path("/" + idOfJustAddedBm).request()
-                        .get()
-                        .getHeaderString("Access-Control-Allow-Origin"));
+        assertEquals("*", target("bookmarks").path("/" + idOfJustAddedBm)
+                .request().get().getHeaderString("Access-Control-Allow-Origin"));
 
         JsonObject jo = target("bookmarks").path("/" + idOfJustAddedBm)
                 .request().get(JsonObject.class);
@@ -182,6 +183,14 @@ public class TestBookmarksRoute extends JerseyTest {
 
         assertEquals(404, target("bookmarks").path("/" + idOfJustAddedBm)
                 .request().get().getStatus());
+    }
+
+    @Test
+    public void testBookmarksOPTIONS() {
+        assertEquals(
+                "Origin, X-Requested-With, Content-Type, Accept",
+                target("bookmarks").request().options()
+                        .getHeaderString("Access-Control-Allow-Headers"));
     }
 
     @After

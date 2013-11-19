@@ -9,6 +9,7 @@ import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -106,5 +107,14 @@ public class BookmarksRoute {
             arrayBuilder.add(currentBookmark);
         }
         return arrayBuilder;
+    }
+
+    @OPTIONS
+    public Response optionsBookmarks() {
+        return Response
+                .ok()
+                .header("Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept")
+                .build();
     }
 }
