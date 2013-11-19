@@ -5,8 +5,10 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -92,6 +94,25 @@ public class TestBookmarksRoute extends JerseyTest {
                 .getString());
         assertEquals("http://www.baz.org",
                 ja.getJsonObject(2).getJsonString("url").getString());
+    }
+
+    @Test
+    public void testAddingBookmarkViaPost() {
+        JsonObject inner = Json.createObjectBuilder().add("title", "foo")
+                .add("url", "http://www.foo.org").build();
+        JsonObject outer = Json.createObjectBuilder().add("bookmark", inner)
+                .build();
+
+        target("bookmarks").request().post(
+                Entity.entity(outer, "application/json"));
+
+        JsonObject jo = target("bookmarks").request().get(JsonObject.class);
+        JsonArray ja = jo.getJsonArray("bookmarks");
+
+        assertEquals("foo", ja.getJsonObject(0).getJsonString("title")
+                .getString());
+        assertEquals("http://www.foo.org",
+                ja.getJsonObject(0).getJsonString("url").getString());
     }
 
     @After

@@ -6,7 +6,9 @@ import java.util.List;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -40,6 +42,18 @@ public class BookmarksRoute {
                 .add("bookmarks", arrayBuilder.build()).build();
 
         return returnObject;
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void postABookmark(JsonObject requestObject) {
+        Bookmark bmToSave = new Bookmark();
+        JsonObject inner = requestObject.getJsonObject("bookmark");
+
+        bmToSave.setTitle(inner.getJsonString("title").getString());
+        bmToSave.setUrl(inner.getJsonString("url").getString());
+
+        ds.saveBookmark(bmToSave);
     }
 
     private JsonArrayBuilder iterateAllBookmarksAndAddToArray(
