@@ -80,6 +80,11 @@ public class TestBookmarksRoute extends JerseyTest {
         ds.saveBookmark(bm2);
         ds.saveBookmark(bm3);
 
+        assertEquals(
+                "*",
+                target("bookmarks").request().get()
+                        .getHeaderString("Access-Control-Allow-Origin"));
+
         JsonObject jo = target("bookmarks").request().get(JsonObject.class);
         JsonArray ja = jo.getJsonArray("bookmarks");
 

@@ -37,7 +37,7 @@ public class BookmarksRoute {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAllBookmarks() {
+    public Response getAllBookmarks() {
         List<Bookmark> allBookmarks = ds.getAllBookmarks();
 
         JsonArrayBuilder arrayBuilder = iterateAllBookmarksAndAddToArray(allBookmarks);
@@ -45,7 +45,8 @@ public class BookmarksRoute {
         JsonObject returnObject = Json.createObjectBuilder()
                 .add("bookmarks", arrayBuilder.build()).build();
 
-        return returnObject;
+        return Response.ok(returnObject)
+                .header("Access-Control-Allow-Origin", "*").build();
     }
 
     @GET
