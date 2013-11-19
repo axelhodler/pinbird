@@ -87,10 +87,6 @@ public class BookmarksRoute {
     @DELETE
     @Path("{id}")
     public void deleteBookmarkById(@PathParam("id") String id) {
-
-        System.out.println("\n----------------------------\n");
-        System.out.println(id);
-        System.out.println("----------------------------\n");
         ds.deleteBookmarkById(id);
     }
 
