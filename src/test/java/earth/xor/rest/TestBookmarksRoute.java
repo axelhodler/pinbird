@@ -33,6 +33,7 @@ public class TestBookmarksRoute extends JerseyTest {
 
     private static MongoClient client;
     private DBCollection col;
+    private BookmarkDatastore ds;
 
     private static void startEmbeddedAndClient() throws UnknownHostException,
             IOException {
@@ -58,6 +59,7 @@ public class TestBookmarksRoute extends JerseyTest {
     public void setUpTheCollection() {
         this.col = client.getDB(DbProperties.DB_NAME).getCollection(
                 DbProperties.COL_NAME);
+        this.ds = new BookmarkDatastore(client);
     }
 
     @Test
@@ -74,7 +76,6 @@ public class TestBookmarksRoute extends JerseyTest {
         bm3.setTitle("baz");
         bm3.setUrl("http://www.baz.org");
 
-        BookmarkDatastore ds = new BookmarkDatastore(client);
         ds.saveBookmark(bm1);
         ds.saveBookmark(bm2);
         ds.saveBookmark(bm3);
@@ -122,7 +123,7 @@ public class TestBookmarksRoute extends JerseyTest {
         Bookmark bm1 = new Bookmark();
         bm1.setTitle("foo");
         bm1.setUrl("http://www.foo.org");
-        BookmarkDatastore ds = new BookmarkDatastore(client);
+
         ds.saveBookmark(bm1);
 
         DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
