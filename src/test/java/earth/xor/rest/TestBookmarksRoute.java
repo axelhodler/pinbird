@@ -18,7 +18,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
@@ -113,6 +115,26 @@ public class TestBookmarksRoute extends JerseyTest {
                 .getString());
         assertEquals("http://www.foo.org",
                 ja.getJsonObject(0).getJsonString("url").getString());
+    }
+
+    @Test
+    public void testGettingBookmarkById() {
+        Bookmark bm1 = new Bookmark();
+        bm1.setTitle("foo");
+        bm1.setUrl("http://www.foo.org");
+        BookmarkDatastore ds = new BookmarkDatastore(client);
+        ds.saveBookmark(bm1);
+
+        DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
+        String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
+
+        JsonObject jo = target("bookmarks").path("/" + idOfJustAddedBm)
+                .request().get(JsonObject.class);
+
+        JsonObject innerOb = jo.getJsonObject("bookmark");
+        assertEquals("foo", innerOb.getJsonString("title").getString());
+        assertEquals("http://www.foo.org", innerOb.getJsonString("url")
+                .getString());
     }
 
     @After

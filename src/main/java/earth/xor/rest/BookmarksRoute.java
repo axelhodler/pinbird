@@ -10,6 +10,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -25,7 +26,8 @@ public class BookmarksRoute {
     private BookmarkDatastore ds;
 
     public BookmarksRoute() throws UnknownHostException {
-        MongoClientURI uri = new MongoClientURI(System.getenv("URI_BASE") + System.getenv("MONGO_PORT"));
+        MongoClientURI uri = new MongoClientURI(System.getenv("URI_BASE")
+                + System.getenv("MONGO_PORT"));
         MongoClient client = new MongoClient(uri);
 
         ds = new BookmarkDatastore(client);
@@ -33,7 +35,7 @@ public class BookmarksRoute {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getAllBookmarks(){
+    public JsonObject getAllBookmarks() {
         List<Bookmark> allBookmarks = ds.getAllBookmarks();
 
         JsonArrayBuilder arrayBuilder = iterateAllBookmarksAndAddToArray(allBookmarks);
@@ -42,6 +44,18 @@ public class BookmarksRoute {
                 .add("bookmarks", arrayBuilder.build()).build();
 
         return returnObject;
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject getBookmarkById(@PathParam("id") String id) {
+        Bookmark bm = ds.getBookmarkById(id);
+        JsonObject inner = Json.createObjectBuilder()
+                .add("title", bm.getTitle()).add("url", bm.getUrl()).build();
+        JsonObject outer = Json.createObjectBuilder().add("bookmark", inner)
+                .build();
+        return outer;
     }
 
     @POST
@@ -62,8 +76,7 @@ public class BookmarksRoute {
 
         for (Bookmark bm : allBookmarks) {
             JsonObject currentBookmark = Json.createObjectBuilder()
-                    .add("title", bm.getTitle())
-                    .add("url", bm.getUrl())
+                    .add("title", bm.getTitle()).add("url", bm.getUrl())
                     .build();
             arrayBuilder.add(currentBookmark);
         }
