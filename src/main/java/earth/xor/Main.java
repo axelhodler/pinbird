@@ -1,20 +1,17 @@
 package earth.xor;
 
-import java.net.UnknownHostException;
+import java.io.IOException;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-
-import earth.xor.rest.RestServer;
+import earth.xor.rest.GrizzlyRestServer;
 
 public class Main {
 
-    public static void main(String args[]) throws UnknownHostException {
+    public static void main(String args[]) throws IOException {
+        GrizzlyRestServer server = new GrizzlyRestServer();
+        server.startServer();
 
-        MongoClientURI mongoUri = new MongoClientURI(System.getenv("MONGO_URI"));
-        MongoClient client = new MongoClient(mongoUri);
-
-        RestServer rest = new RestServer(client);
-        rest.setUp();
+        while(true) {
+            System.in.read();
+        }
     }
 }
