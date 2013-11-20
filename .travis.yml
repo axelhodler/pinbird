@@ -1,0 +1,7 @@
+language: java
+
+env:
+  - PORT=5000
+  - MONGO_PORT=12345
+  - MONGO_URI=mongodb://localhost:12345
+  - DB_NAME=test
