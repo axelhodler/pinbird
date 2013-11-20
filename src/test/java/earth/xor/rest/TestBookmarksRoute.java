@@ -87,16 +87,31 @@ public class TestBookmarksRoute extends JerseyTest {
         JsonObject jo = target("bookmarks").request().get(JsonObject.class);
         JsonArray ja = jo.getJsonArray("bookmarks");
 
+        DBObject fooDoc = col.findOne(new BasicDBObject("title", "foo"));
+        String fooId = fooDoc.get(DbProperties.ID).toString();
+
+        assertEquals(fooId, ja.getJsonObject(0).getJsonString("_id")
+                .getString());
         assertEquals("foo", ja.getJsonObject(0).getJsonString("title")
                 .getString());
         assertEquals("http://www.foo.org",
                 ja.getJsonObject(0).getJsonString("url").getString());
 
+        DBObject barDoc = col.findOne(new BasicDBObject("title", "bar"));
+        String barId = barDoc.get(DbProperties.ID).toString();
+
+        assertEquals(barId, ja.getJsonObject(1).getJsonString("_id")
+                .getString());
         assertEquals("bar", ja.getJsonObject(1).getJsonString("title")
                 .getString());
         assertEquals("http://www.bar.org",
                 ja.getJsonObject(1).getJsonString("url").getString());
 
+        DBObject bazDoc = col.findOne(new BasicDBObject("title", "baz"));
+        String bazId = bazDoc.get(DbProperties.ID).toString();
+
+        assertEquals(bazId, ja.getJsonObject(2).getJsonString("_id")
+                .getString());
         assertEquals("baz", ja.getJsonObject(2).getJsonString("title")
                 .getString());
         assertEquals("http://www.baz.org",
@@ -139,6 +154,7 @@ public class TestBookmarksRoute extends JerseyTest {
                 .request().get(JsonObject.class);
 
         JsonObject innerOb = jo.getJsonObject("bookmark");
+        assertEquals(idOfJustAddedBm, innerOb.getJsonString("_id").getString());
         assertEquals("foo", innerOb.getJsonString("title").getString());
         assertEquals("http://www.foo.org", innerOb.getJsonString("url")
                 .getString());

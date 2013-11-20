@@ -68,7 +68,8 @@ public class BookmarksRoute {
                     .header("Access-Control-Allow-Origin", "*").build();
         }
         JsonObject inner = Json.createObjectBuilder()
-                .add("title", bm.getTitle()).add("url", bm.getUrl()).build();
+                .add("title", bm.getTitle()).add("_id", bm.getId())
+                .add("url", bm.getUrl()).build();
         JsonObject outer = Json.createObjectBuilder().add("bookmark", inner)
                 .build();
         return Response.ok(outer).header("Access-Control-Allow-Origin", "*")
@@ -101,8 +102,8 @@ public class BookmarksRoute {
 
         for (Bookmark bm : allBookmarks) {
             JsonObject currentBookmark = Json.createObjectBuilder()
-                    .add("title", bm.getTitle()).add("url", bm.getUrl())
-                    .build();
+                    .add("_id", bm.getId()).add("title", bm.getTitle())
+                    .add("url", bm.getUrl()).build();
             arrayBuilder.add(currentBookmark);
         }
         return arrayBuilder;
