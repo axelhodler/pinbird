@@ -208,6 +208,30 @@ public class TestBookmarksRoute extends JerseyTest {
                 .getHeaderString("Access-Control-Allow-Origin"));
     }
 
+    @Test
+    public void testBookmarksOPTIONSonBookmarkId() {
+        createAndSaveTestBookmark();
+
+        DBObject addedDoc = col.findOne(new BasicDBObject("title", "foo"));
+        String idOfJustAddedBm = addedDoc.get(DbProperties.ID).toString();
+
+        assertEquals(
+                "Origin, X-Requested-With, Content-Type, Accept",
+                target("bookmarks").path("/" + idOfJustAddedBm).request()
+                        .options()
+                        .getHeaderString("Access-Control-Allow-Headers"));
+        assertEquals(
+                "GET, POST, DELETE",
+                target("bookmarks").path("/" + idOfJustAddedBm).request()
+                        .options()
+                        .getHeaderString("Access-Control-Allow-Methods"));
+        assertEquals(
+                "*",
+                target("bookmarks").path("/" + idOfJustAddedBm).request()
+                        .options()
+                        .getHeaderString("Access-Control-Allow-Origin"));
+    }
+
     @After
     public void dropCollection() {
         col.drop();

@@ -113,10 +113,22 @@ public class BookmarksRoute {
     public Response optionsBookmarks() {
         return Response
                 .ok()
+                .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Headers",
                         "Origin, X-Requested-With, Content-Type, Accept")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("{id}")
+    public Response blabla(@PathParam("id") String id) {
+        return Response
+                .ok()
                 .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers",
+                        "Origin, X-Requested-With, Content-Type, Accept")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE")
                 .build();
     }
 }
