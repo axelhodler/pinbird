@@ -15,24 +15,6 @@
 	</properties>
 
 	<dependencies>
-		<!-- Java DSL for easy testing of REST services -->
-		<!-- Should place before JUnit in order to make sure that the correct version
-			of Hamcrest is used -->
-		<dependency>
-			<groupId>com.jayway.restassured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<version>1.8.1</version>
-			<exclusions>
-				<!-- Exclude Groovy because of issue with never asm version than jersey 
-					can handle -->
-				<exclusion>
-					<groupId>org.codehaus.groovy</groupId>
-					<artifactId>groovy</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -50,22 +32,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sparkjava</groupId>
-			<artifactId>spark-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-
-		<dependency>
 			<!-- MongoDB Java driver -->
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>2.10.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1</version>
 		</dependency>
 
 		<dependency>
