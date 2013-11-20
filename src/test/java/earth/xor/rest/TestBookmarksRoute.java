@@ -204,6 +204,8 @@ public class TestBookmarksRoute extends JerseyTest {
                         .getHeaderString("Access-Control-Allow-Headers"));
         assertEquals("GET, POST, DELETE", target("bookmarks").request()
                 .options().getHeaderString("Access-Control-Allow-Methods"));
+        assertEquals("*", target("bookmarks").request().options()
+                .getHeaderString("Access-Control-Allow-Origin"));
     }
 
     @After
