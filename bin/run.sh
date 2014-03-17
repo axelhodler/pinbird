@@ -1,9 +1,7 @@
 #!/bin/sh
 
-export PORT=$1
-export MONGO_URI=$2
-export DB_NAME=$3
-
-echo -e "run server on PORT: $1,\nMongoClientURI: $2,\nDB_NAME: $3\n"
+export PORT=5000
+export MONGO_URI=mongodb://localhost:27017
+export DB_NAME=test
 
 mvn exec:java -Dexec.mainClass="earth.xor.Main"
